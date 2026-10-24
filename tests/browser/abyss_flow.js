@@ -1,0 +1,20 @@
+const { chromium } = require(process.env.PW_PATH||'/home/claude/.npm-global/lib/node_modules/playwright');
+const fs=require('fs'); const path=require('path'); const D=path.join(__dirname,'..','.tmp')+'/'; require('fs').mkdirSync(D,{recursive:true}); require('fs').writeFileSync(D+'host.html','<!doctype html><body style="margin:0"><iframe id=f src="frame.html" style="position:absolute;top:30px;left:0;width:1280px;height:720px;border:0" sandbox="allow-scripts allow-same-origin"></iframe></body>');
+fs.writeFileSync(D+'frame.html','<!doctype html><html><head><meta charset=utf-8></head><body style="margin:0">'+fs.readFileSync(path.join(__dirname,'..','..','index.html'),'utf8')+'</body></html>');
+(async()=>{
+ const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium'}); const pg=await b.newPage({viewport:{width:1280,height:760}});
+ const errs=[]; pg.on('pageerror',e=>errs.push(e.message)); const ok=(c,m)=>console.log((c?'PASS ':'FAIL ')+m);
+ await pg.goto('file://'+D+'host.html'); await pg.waitForTimeout(800); const fr=pg.frames()[1]; await fr.evaluate(()=>__seal.closeSlots&&__seal.closeSlots());
+ await pg.mouse.click(640,330);
+ await fr.evaluate(()=>{const t=__seal,s=t.get(); t.calm(); t.openSeal(); t.openSeal2(); for(let i=0;i<60;i++)t.step(1/60); t.calm(); for(const c of s.cores){c.state='active';c.connected=true;} s.G.hard=true; t.reachEnding(); s.res.shard=40; s.G.tablets[0].mods=['rocks','bounty'];});
+ await pg.waitForTimeout(1500); await pg.screenshot({path:D+'ending.png'});
+ ok(await fr.evaluate(()=>__seal.get().G.ending),'ending screen up');
+ await pg.keyboard.press('Enter'); await pg.waitForTimeout(200); ok(!(await fr.evaluate(()=>__seal.get().G.ending)),'Enter continues');
+ await fr.evaluate(()=>{const s=__seal.get(), A=__seal.CONFIG.altar; s.P.x=(A.x+1)*16; s.P.y=(A.y+3)*16;}); await pg.waitForTimeout(500);
+ await pg.keyboard.press('KeyE'); await pg.waitForTimeout(300); const st=await fr.evaluate(()=>__seal.uiState()); ok(st.menu&&st.tab==='altar','E at altar opens abyss gate tab '+JSON.stringify(st));
+ await pg.screenshot({path:D+'altar.png'});
+ { const r=(await fr.evaluate(()=>__seal.ui())).find(q=>q.id==='tablet-1'); await pg.mouse.click(r.x, r.y+30); } await pg.waitForTimeout(800); ok((await fr.evaluate(()=>__seal.abyssLayer().kind))==='abyss','tablet button enters abyss');
+ await fr.evaluate(()=>{const s=__seal.get(); s.P.hp=s.P.max=99; s.P.inv=999; for(let i=0;i<60*12;i++) __seal.step(1/60);}); await pg.waitForTimeout(300);
+ await pg.screenshot({path:D+'abyss_floor.png'});
+ ok(errs.length===0,'no page errors '+errs.join('|')); await b.close();
+})();
