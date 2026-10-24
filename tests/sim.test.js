@@ -132,7 +132,7 @@ run(20); try{ t.draw(); ok(true,'draw in abyss'); }catch(e){ ok(false,'draw abys
 ok(t.get().structs.filter(q=>!q.dead).length===nb && nb>0, `built ${nb} in abyss`);
 t.leaveAbyss(); L=t.layerInfo(); ok(L.kind==='valley'&&L.W===WW, 'back in valley '+JSON.stringify(L));
 const after=snap(); ok(before===after, 'valley state identical after round trip'+(before===after?'':'\n'+before.slice(0,300)+'\n'+after.slice(0,300)));
-ok(t.get().P.bag.length===PB, 'player state carried');
+ok(t.get().P.bag.length>=PB, 'player state carried (bag kept across layers, may grow from pickups)');
 run(10); try{ t.draw(); ok(true,'draw valley after'); }catch(e){ ok(false,'draw '+e.stack); }
 // second trip creates fresh abyss
 t.enterAbyss(1); ok(t.get().structs.length===0,'fresh abyss on re-entry'); t.leaveAbyss();
@@ -798,6 +798,60 @@ console.log('\n# v40');
   t.damageCore(fc, 1e9); s = t.get(); ok(fc.state !== 'active' && s.G.ruins.filter(r => r.lostK === fc.k).length >= wn && wn >= 2, `fallen base: ${wn} buildings -> ruins`);
   t.restoreRuins(); s = t.get(); ok(!s.structs.some(q => !q.dead && Math.hypot(q.x - fc.x, q.y - fc.y) <= 3), 'dawn repair skips the fallen base');
   fc.state = 'active'; fc.hp = fc.max; t.recomputeNet(); t.restoreRuins(); s = t.get(); ok(s.structs.some(q => !q.dead && q.type === 'xbow' && Math.hypot(q.x - fc.x, q.y - fc.y) <= 4), 're-woken base can be repaired');
+}
+
+// ===== v41: 프리팹 입체 구조물 · 화석 협곡 · 지역 이름 카드 =====
+console.log('\n# v41');
+{
+  const C = t.CONFIG, K = C.canyon;
+  ok(Object.keys(t.PREFABS).every(id => t.prefabErrors(id).length === 0), 'every prefab passes its own grammar check (ledges fenced by cliffs, stairs one level apart)');
+  ok(t.pfShape(['12', '..'], 1, false).map(r => r.join('')).join('|') === '.1|.2' && t.pfShape(['12'], 0, true)[0].join('') === '21', 'prefab rotate / mirror');
+  t.newGame(); let s = t.get(); t.calm();
+  const pl = t.prefabsPlaced(); ok(pl.surf.length >= 3 && pl.surf.some(a => a[0].startsWith('hill')), 'plains prefabs placed: ' + pl.surf.map(a => a[0]).join(','));
+  ok(pl.canyon.length >= 3 && pl.canyon.some(a => a[0] === 'mesa'), 'canyon prefabs placed: ' + pl.canyon.map(a => a[0]).join(','));
+  let cl = 0, hi = 0, st = 0; for (const v of s.tile) { if (v === T.CLIFF) cl++; if (v === T.LEDGE || v === T.LEDGE2) hi++; if (v === T.STAIR) st++; } ok(cl > 40 && hi > 40 && st >= 4 && t.pathOK(-1), `cliffs ${cl}, ledge ${hi}, stairs ${st}, paths ok`);
+  // 평원 단 위 칸은 전부 본거지에서 걸어서 닿는다(계단으로)
+  const hm = t.pfReach((x, y) => x >= 0 && y >= 0 && x < WW && y < 100, C.surface.cx, C.surface.cy + 2); let lost = 0; for (let y = 0; y < 100; y++) for (let x = 0; x < 100; x++) { const v = s.tile[idx(x, y)]; if ((v === T.LEDGE || v === T.LEDGE2 || v === T.STAIR) && !hm[idx(x, y)]) lost++; } ok(lost === 0, 'every plains ledge reachable by stairs, unreachable ' + lost);
+  // 절벽 높이: 2층 단 옆 절벽은 2, 앞면은 아래가 낮을 때만
+  { let ok2 = false; for (let i = 0; i < s.tile.length && !ok2; i++) if (s.tile[i] === T.LEDGE2) { const x = i % WW, y = (i / WW) | 0; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (s.tile[idx(x + dx, y + dy)] === T.CLIFF && t.cliffLv(x + dx, y + dy) === 2) ok2 = true; } ok(ok2 && t.lvAt(C.surface.cx, C.surface.cy) === 0, 'cliff height follows the ledge it fences'); }
+  // 협곡: 구역·입구 굴·잠긴 코어
+  ok(t.zoneAt(K.core[0], K.core[1]) === 'canyon' && t.zoneAt(60, 120) === 'ruin', 'canyon zone east of the temple');
+  const sed = []; for (let x = C.ruins.x1; x <= K.x0 + 1; x++) sed.push(s.tile[idx(x, K.entY)]); ok(sed.filter(v => v === T.SEDW).length >= 3 && t.TILES[T.SEDW].pick3, 'entrance tunnel sealed by hardened sediment (crystal pickaxe)');
+  const cc = s.cores.find(c => c.canyon); ok(cc && cc.optional && !t.baseCores().includes(cc) && t.coreLock(cc) && /거룡/.test(t.coreLock(cc)), 'canyon core is optional and held by the wyrm');
+  // 협곡 안쪽은 굴 끝에서 코어·균열까지 걸어서 닿는다
+  const inC = (x, y) => x > K.x0 && x < K.x1 && y > K.y0 && y < K.y1; const cm = t.pfReach(inC, K.x0 + 2, K.entY); ok(cm[idx(K.core[0], K.core[1] + 2)] && cm[idx(K.gate[0], K.gate[1])], 'canyon walkable from tunnel to core and crack');
+  // 수정 곡괭이 없이는 퇴적층을 못 캔다
+  { const P = s.P; P.alive = true; P.gear.pick3 = 0; const sx = C.ruins.x1 + 1; P.x = (sx - 1.5) * 16; P.y = (K.entY + .5) * 16; t.applyCommand(0, { type: 'intent', mvx: 0, mvy: 0, mx: (sx + .5) * 16, my: (K.entY + .5) * 16, attack: false, dig: true }); run(2); ok(s.tile[idx(sx, K.entY)] === T.SEDW, 'sediment needs crystal pickaxe');
+    P.gear.pick3 = 1; run(4); ok(s.tile[idx(sx, K.entY)] !== T.SEDW, 'crystal pickaxe digs the sediment'); t.applyCommand(0, { type: 'intent', mvx: 0, mvy: 0, mx: 0, my: 0, attack: false, dig: false }); }
+  // 걸어 들어가면 열린다: 거룡·균열·목표 줄
+  s.P.x = (K.x0 + 4) * 16; s.P.y = (K.entY + .5) * 16; run(.2); s = t.get();
+  ok(s.G.canyonOpen && s.enemies.some(e => e.k === 'wyrm' && e.sleep) && s.gates.some(g => g.canyon && g.open), 'entering opens the canyon: sleeping wyrm, crack open');
+  ok(/화석 협곡 \(선택\)/.test(t.objective()), 'objective shows canyon steps inside: ' + t.objective());
+  { t.openSeal(); run(2); t.openSeal2(); run(2); t.calm(); s = t.get(); for (let i = 0; i < s.tile.length; i++) if (s.tile[i] === T.SEDW) s.tile[i] = T.RUINF; s.G.ver++; ok(t.pathOK(-1), 'paths ok after canyon opens (temple open, tunnel dug)'); }
+  // 밤 물길
+  s.G.flood = true; const wi = s.tile.findIndex(v => v === T.WASH); ok(wi > 0 && t.wetAt(wi), 'dry riverbed floods at night'); s.G.flood = false; ok(!t.wetAt(wi), 'and is dry by day');
+  t.calm(); s = t.get(); s.G.clock = 105 + 5; s.G.night = true; t.step(1 / 60); ok(s.G.flood, 'flood flag set while it is night'); s.G.clock = 0; s.G.night = false; t.step(1 / 60);
+  // 고지대 포탑: 단 위면 사거리 +1
+  { t.calm(); s = t.get(); const hy = C.surface.cy + 9, lx = C.surface.cx - 12, ly = hy, gx = C.surface.cx - 12, gy = hy + 2; for (let y = hy - 1; y <= hy + 3; y++) for (let x = lx - 1; x <= lx + 12; x++) s.tile[idx(x, y)] = T.GRASS; s.tile[idx(lx, ly)] = T.LEDGE; s.G.ver++;
+    const L = t.STRUCTURES.xbow.lv[0], D = t.STRUCTURES.xbow, shoot = (x, y) => { t.calm(); const e = t.makeEnemy('rat', (x + .5) * 16 + (L.range + .5) * 16, (y + .5) * 16); e.sleep = false; const r = t.turretFire({ D, x, y, cd: 0 }, L, (x + .5) * 16, (y + .5) * 16, 'bolt'); e.dead = true; return !!r; };
+    ok(shoot(lx, ly) && !shoot(gx, gy), 'turret on a ledge reaches 1 tile farther'); }
+  // 거룡: 솟는 뼈 · 처치 · 코어
+  { t.calm(); s = t.get(); const b = t.makeEnemy('wyrm', (K.core[0] + .5) * 16, (K.core[1] - 4) * 16, true); s.P.x = b.x - 60; s.P.y = b.y + 10; s.P.alive = true; const n0 = (s.G.bombs || []).length; t.boneSpikes(b, 1, false); const n1 = (s.G.bombs || []).length; t.boneSpikes(b, 1, true); const n2 = (s.G.bombs || []).length;
+    ok(n1 > n0 && n2 - n1 > n1 - n0, `bone spikes telegraph a line (${n1 - n0}), three lines at half hp (${n2 - n1})`);
+    b.hp = 1; t.hurtEnemy(b, 50, 'sword', true); run(.2); s = t.get(); ok(s.G.wyrmDown && s.res.fossil >= 12 && s.G.gotFossil && !t.coreLock(cc), 'wyrm down: fossils, core released'); }
+  // 협곡 장비·연구
+  { s = t.get(); for (const k in s.res) s.res[k] = 999; const m0 = s.P.max; s.P.x = (C.surface.cx + .5) * 16; s.P.y = (C.surface.cy + 2) * 16; t.applyCommand(0, { type: 'craft', id: 'bonemail' }); t.applyCommand(0, { type: 'craft', id: 'amberscope' }); s = t.get();
+    ok(s.P.bonemail && s.P.max === m0 + 3 && s.P.amberscope && t.accMods(s.P).xbowRange >= .25, 'fossil pauldron and amber scope'); t.applyCommand(0, { type: 'research', id: 'defH' }); ok(s.tech.defH, 'high-ground research unlocks with fossils'); }
+  // 지역 이름 카드
+  { t.calm(); s = t.get(); s.G.zSeen = {}; s.G.zNow = null; s.G.card = null; s.P.alive = true; s.P.x = (C.surface.cx + .5) * 16; s.P.y = (C.surface.cy + 3) * 16; run(1); ok(s.G.card && s.G.card.z === 'surface' && s.G.card.big, 'first visit: big region card');
+    s.P.x = (C.beyond.x0 + 6) * 16; s.P.y = 50 * 16; s.G.card = null; t.regionTick(.3); ok(!s.G.card, 'no card while just brushing a border'); t.regionTick(.5); ok(s.G.card && s.G.card.z === 'cave', 'card after staying');
+    s.P.x = (C.surface.cx + .5) * 16; s.P.y = (C.surface.cy + 3) * 16; t.regionTick(.8); ok(s.G.card && s.G.card.z === 'surface' && !s.G.card.big, 'revisit: small card'); }
+  // 저장·불러오기, 예전 저장(협곡 없음) 옮기기
+  { t.calm(); t.saveGame(); s = t.get(); s.G.canyonOpen = false; t.loadGame(); s = t.get(); ok(s.G.canyonOpen && s.G.wyrmDown && s.G.zSeen && s.G.zSeen.cave, 'save/load keeps canyon progress and seen regions');
+    t.newGame(); s = t.get(); t.calm(); for (let y = K.y0; y <= K.y1; y++) for (let x = K.x0; x <= K.x1; x++) s.tile[idx(x, y)] = T.BEDROCK; for (let x = C.ruins.x1 - 3; x < K.x0; x++) for (let dy = -1; dy <= 1; dy++) if (s.tile[idx(x, K.entY + dy)] === T.SEDW) s.tile[idx(x, K.entY + dy)] = T.BEDROCK;
+    s.cores.splice(s.cores.findIndex(c => c.canyon), 1); s.gates.splice(s.gates.findIndex(g => g.canyon), 1); delete s.res.fossil; delete s.res.amber; t.saveGame(); t.loadGame(); s = t.get();
+    ok(s.cores.some(c => c.canyon) && s.tile[idx(K.core[0], K.core[1])] !== T.BEDROCK && s.gates.some(g => g.canyon) && s.res.fossil === 0, 'old save without canyon gets it carved in on load'); }
+  t.newGame();
 }
 
 summary();

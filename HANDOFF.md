@@ -1,33 +1,37 @@
-# 봉인 너머 — 다음 세션 인수인계 (2026-10-24, v40 기준)
+# 봉인 너머 — 다음 세션 인수인계 (2026-10-24, v41 기준)
 
 새 세션의 Claude가 이 파일 하나만 읽고 이어서 작업할 수 있게 쓴 문서다. 위에서부터 읽으면 된다.
 
 ## 0. 새 세션에서 맨 먼저 할 일
 
-1. 이 묶음(봉인너머_인수인계_v40.zip)을 풀어 작업 폴더에 둔다. 게임 본체는 `index.html` 하나다.
+1. v41부터 GitHub 저장소 `noru358/japda`(브랜치 `claude/exciting-tesla-4fuf8f`)에 있다. 저장소를 받거나, 없으면 묶음(zip)을 풀어 작업 폴더에 둔다. 게임 본체는 `index.html` 하나다.
    - 묶음이 없으면 게임 아티팩트를 Artifact `read`로 읽어 최신 본체를 받는다: https://claude.ai/artifact/KqtwaMB6jLPdoVb8F9tmJ9 (같은 아티팩트에 `HANDOFF.md`와 `tests/`도 함께 올려 두었다. `read` + `path`로 받을 수 있다.)
-2. `PW_PATH=$(npm root -g)/playwright sh tests/run.sh` 로 전부 초록인지 확인한다(시뮬레이션 312개×시드 3종, 브라우저 45개). Chromium은 `/opt/pw-browsers/chromium`(tests/browser/_lib.cjs에 하드코딩. 환경이 다르면 고친다).
+2. `PW_PATH=$(npm root -g)/playwright sh tests/run.sh` 로 전부 초록인지 확인한다(시뮬레이션 342개×시드 3종, 브라우저 49개). 클라우드 세션에선 `PW_PATH=/opt/node22/lib/node_modules/playwright`. Chromium은 `/opt/pw-browsers/chromium`(tests/browser/_lib.cjs에 하드코딩. 환경이 다르면 고친다).
 3. 수정 → 테스트 → 같은 아티팩트 URL에 재배포(`url` 지정, label에 버전명) 순서를 지킨다.
-4. 현재 v40(연결망 제거·전진기지 습격까지). 바로 아래 'v33' 단락의 '다음 후보'에서 사용자에게 고르게 하거나, 사용자가 새로 지시한 것을 한다. 사용자 피드백 방식은 1절 참고.
+4. 현재 v41(지도 설계 문서·프리팹 입체 구조물·화석 협곡·지역 이름 카드까지). 바로 아래 'v41' 단락의 '다음 후보'에서 사용자에게 고르게 하거나, 사용자가 새로 지시한 것을 한다. 사용자 피드백 방식은 1절 참고.
+5. 지도를 건드리기 전에 `docs/MAP_DESIGN.md`(지도 설계 문서)를 먼저 읽는다. 원칙(본거지 중심 동심원, 바깥일수록 어려움, 모양은 바이옴마다)과 지금 지도의 문제, 목표 배치 제안이 있다.
+
+v41: 지도 설계 문서 `docs/MAP_DESIGN.md`(+ `docs/map_v40.png`, `docs/map_v41.png`). 프리팹: `PREFABS`(글자 격자, 글자 뜻은 PF_T와 문서 5절)·`PF_RULES`(구역별 개수, rock이면 벽도 깎음)·`pfShape`(돌리기·뒤집기)·`prefabErrors`(조각 문법 검사)·`placePrefab`(맞는 자리면 찍고, 원래 닿던 칸이 끊기거나 새 칸에 못 가면 되돌림)·`placeRules`·`pfReach`. 평원은 `genSurfacePrefabs`(gen 끝, carve 뒤), 협곡은 `genCanyon` 안. 타일 LEDGE·LEDGE2(hi 1·2)·STAIR, 높이 `hiOf`/`lvAt`/`cliffLv`(절벽은 맞닿은 단 중 가장 높은 층), drawWall의 D.cliff 분기는 윗면을 단과 같은 높이로 그리고 아래가 낮을 때만 앞면. 고지대: turretFire 사거리 +1(defH면 +2). 화석 협곡 `CONFIG.canyon`(x 120~211, y 99~148, entY 116, 코어 196,124, 균열 176,143), zoneAt 'canyon', 타일 CANF·SANDST·BONE(화석)·AMBER(호박, pick2)·SEDW(굳은 퇴적층, pick3, 입구 굴)·WASH(마른 강바닥)·ALTS(옛 제단 장식). `genCanyon`은 별도 난수(seed+5151)라 다른 바이옴 생성 순서는 안 바뀐다. `canyonTunnel`은 타일만 보고 판다(저장 불러오기에서도 씀). `openCanyon`(굴 지나 협곡 안에 들어서면), G.flood(밤 + 협곡 열림) → `wetAt`(물·강바닥 0.6배), 적 raptor·scarab, 보스 wyrm(bossAI 'spikes' = `boneSpikes`, 반피 랩터 소환), 코어 `canyon:true, optional:true`(baseCores·제단 조건 밖, pathOK는 협곡 열리기 전엔 건너뜀). 목표는 QUESTS에 안 넣고 `CANYON`·`canyonInfo`가 협곡 안(또는 사원 쪽 굴 앞)에서만 끼어든다. 장비 bonemail(화석 견갑)·amberscope(호박 조준경), 연구 defH(고지대 축성, needsCanyon), 벽 5단계 화석 골조 벽. 지역 이름 카드 `REGIONS`·`regionTick`·`drawRegionCard`(G.card, G.zSeen 저장). 구역 첫 진입 때 뜨던 가운데 큰 제목은 카드와 겹쳐 없앴다. 예전(v40) 저장: loadGame이 `ensureCanyon`으로 협곡 자리(기반암)만 채우고 코어를 붙인다. 없는 자원 키는 0으로 채운다. SAVE_VER는 7 그대로.
+다음 후보: 목표 배치(동심원)로 지도 전환 — 문서 3절, 고치 동굴(두 번째 선택 바이옴, 전환 뒤 권장), 조각 더 만들기(사원 방 조각화·둥지 굴·다리), 단 위 포탑 사거리 표시를 패널·미리보기 원에 반영(지금은 turretFire에만 적용), 보스 고유 장비, 테크트리 양자택일, 레벨업 특성(보류).
 
 v19 변경 요약: UI 배율 자동(화면 기준 1~1.6배, [ ]로 조절), 월드 배율 2.5(- =), 군더더기 문구 제거, 장신구 드롭 감소(빛나는 적 1.2%×50%, 보스 1개), 구리 수요 약 45% 감축 + 수정 코어 구리 +1/5초 + 적 구리 드롭 증가, 레벨(`gainXP`, `CONFIG.hero`), 무기 +1~+5(`WT`, `WT_COST`, `WT_PERK`, 레시피 `w_<무기>_<단계>`), 제작 탭은 장비 사슬의 다음 단계만(`CRAFT_CATS`, `chainNext`), 캐릭터 탭 작업 고르기(`ui.accMode`), 자원 툴팁 '쓰는 곳'(`RES_USE`). 제작 명령이 잠김 조건(`recipeLock`)도 검사한다(이전엔 UI만 막았다).
 
 v32 지하 바다: H=210, `CONFIG.sea`(x 6~208, y 150~207, 코어 184,188, 보스 184,175, 균열 110,200), `genSea`(genHigh 뒤), 타일 DEEP(deep)·SAND·CORAL·CLAM(진주)·SEADOOR(고대 골렘 처치 시 열림). 이동 모드 문자열: 'g' 기본, 'r' 포함이면 깊은 물 통과(뗏목), 'h' 포함이면 구덩이 통과(갈고리), 'w'는 물에서만(헤엄치는 적), 'f'는 비행. `openSea`(바다 진입 시), `swimAI`(매복꾼), `leviAI`(심해 군주: under 무적 → tele 붉은 원 → open 빈틈), hurtEnemy는 e.under면 무시. 길 검사는 바다 균열(g.sea)과 섬 코어(c.sea)를 뺀다. 목표 단계에 raft·sea·levi·seacore. G.seaStair 저장. 위협 단계 7개(…·지하 바다·하드모드·하드모드 바이옴·엔딩 후).
 v40: recomputeNet은 깨어 있는 코어 전부가 뿌리, 전신주는 영역이 닿으면(거리 ≤ 반지름 합+1) 붙음. canPlace 전신주는 terrConn 안만, relay는 막음. 습격 `RAID_UNITS`·`CONFIG.raid`·`baseDefense`·`pickRaidTarget`(G.warned 때)·`raidField`·`spawnRaids`(spawnNight 끝), 적 `e.rk`가 G.raidF[k] 거리장을 따름, 표적 표시는 drawCore. 함락은 damageCore에서 영역 안 건물 → 잔해(lostK), restoreRuins가 lostK 코어 잠든 동안 건너뜀.
 
-v39: 정제기 제거(건설 목록·canPlace에서 막음, STRUCTURES.drill 정의는 예전 저장 호환용). 장기: 월드 배치 철학(사용자 확정) — 큰 틀은 본거지 중심 동심원(바깥 고리일수록 어려움), 개별 바이옴 모양은 직각·부정형·옆에 붙기 등 바이옴마다 따로. 지도 설계 문서로 잡을 것.
+v39: 정제기 제거(건설 목록·canPlace에서 막음, STRUCTURES.drill 정의는 예전 저장 호환용). 장기: 월드 배치 철학(사용자 확정) — 큰 틀은 본거지 중심 동심원(바깥 고리일수록 어려움), 개별 바이옴 모양은 직각·부정형·옆에 붙기 등 바이옴마다 따로. → v41에서 docs/MAP_DESIGN.md로 정리(전환 자체는 아직).
 
 v38: 배선은 `planChain(sid,tx,ty)`(캐시 G.planC)·`drawChainPlan`·명령 {type:'chain', list}. dragLine은 남아 있지만 안 쓴다. `freeForNode`, `REF_KEEP`(정제기 보존량)·`refCan`.
 
 v37: `dragLine`/`lineEnd`/`lineFrom`(G.line, 건설 모드에서 link가 있는 건물을 끌 때), 중계탑 `relay`(STRUCTURES, BUILD_TABS.eco, isNode로 전신주와 같은 연결 노드), P키·하단 '메뉴'(hb-menu)로 일시정지.
-장기 과제(사용자): 절벽은 지금처럼 우겨넣지 말고 '문법'을 가진 입체 구조물 체계로 — 2층 단·계단·사원·일반 제단·석상 등을 미리 만든 조각(프리팹)과 배치 규칙으로 짓는 방향. 시제품 절벽(CONFIG.cliffs)은 그때까지 평원에만 둔다.
+장기 과제(사용자): 절벽은 지금처럼 우겨넣지 말고 '문법'을 가진 입체 구조물 체계로 — 2층 단·계단·사원·일반 제단·석상 등을 미리 만든 조각(프리팹)과 배치 규칙으로 짓는 방향. → v41에서 1차 구현(PREFABS·PF_RULES, 문서 5절).
 
 v36: 숫자는 피해만 정수(fN), 공격 속도 발/초·재사용 시간은 소수 첫째로 되돌림. 월드 슬롯: `SAVE_BASE`/`slotKey`/`setSlot`/`curSlot`(변수명 slot은 UI 함수와 겹쳐 못 씀), `slotInfo`, `openSlots`/`closeSlots`/`pickSlot`/`newSlot`/`deleteSlot`, `drawSlots`(drawHUD0 끝), ui.slots 동안 step 정지. 부팅 시 openSlots — 하네스(harness.js)와 브라우저 _lib.cjs는 부팅 뒤 closeSlots를 부른다.
 
 v35: 화면 숫자 정수만(`fN`=반올림, `cleanNum`은 모든 소수 반올림, '배'·ms 예외), 포탑 속도 '분당 공격'. 자원 밸런스: CORE_LV 생산 본거지 1·2·2·3 / 다른 코어 1·1·2·2, 둘째 생산물 10초마다(G.prodOdd), `coreProdQ`(정수 순환은 본거지만). 채굴기(id는 그대로 drill) → 정제기: `REFINE` 제련법, `refOf`/`cycleRefine`, 명령 {type:'refine'}, 패널 버튼 id sel-refine, 재료 없으면 s.idle. incomeNow는 정제기 재료를 음수로.
 남은 논의: 8번 코어 연결 피로 → '줄 긋기 자동 배선' 제안, 사용자 확인 대기. 절벽 시제품 반응 대기.
 
-v34 피드백 묶음: 업글 표시는 건설 모드만(drawWorldMarks), `flyWay`/`flyField`(마비 정령 우회), `cleanNum`(pop·uText), `drawAreas`/`drawTileArea`/`AREA`(토템·등불·화로 범위 칸), 사원 시야 -2·어둠 .66, 바다는 '숨은 바다'(어둠 .22, 시야 +2, 물빛), `jo(낱말, 조사)`, 전신주 `lv[].link`·`pylonLink`(recomputeNet·nearConnectedNode), 귀환 `RECALL`·`startRecall`·`updRecall`(명령 recall, H), 평원 절벽 시제품 `genCliffs`·타일 CLIFF(drawWall의 D.cliff 분기, gen의 carveTo가 길을 뚫음).
+v34 피드백 묶음: 업글 표시는 건설 모드만(drawWorldMarks), `flyWay`/`flyField`(마비 정령 우회), `cleanNum`(pop·uText), `drawAreas`/`drawTileArea`/`AREA`(토템·등불·화로 범위 칸), 사원 시야 -2·어둠 .66, 바다는 '숨은 바다'(어둠 .22, 시야 +2, 물빛), `jo(낱말, 조사)`, 전신주 `lv[].link`·`pylonLink`(recomputeNet·nearConnectedNode), 귀환 `RECALL`·`startRecall`·`updRecall`(명령 recall, H), 평원 절벽 시제품 `genCliffs`·타일 CLIFF(drawWall의 D.cliff 분기, gen의 carveTo가 길을 뚫음). → v41에서 genCliffs는 없애고 프리팹으로 대체.
 보류·논의 중: 자원 밸런스(코어 생산이 단계마다 선형 증가 vs 소비처 유한 → 후반 과잉) 개편안을 정한 뒤 채굴기 처리 결정. 코어 연결 피로(8번)는 '줄 긋기 자동 배선' 제안 상태. 절벽은 시제품 반응 보고 확대 여부 결정.
 
 v33 하드모드 세 갈래: H=272. `CONFIG.volc`(x 4~106, y 210~270, 입구 x40, 코어 86,258, 균열 18,262, erupt) · `CONFIG.blight`(x 108~210, 입구 x150, 코어 190,258, 균열 160,266, 심장 3곳, rotEvery, spreadEvery). `genVolc`/`genBlight`(genSea 뒤) + 공용 `branchStair`(바다 모래톱→HSEAL 3줄→갈래 바닥)·`branchCarve`. zoneAt 'volc'/'blight'(y≥210). 새 타일 LAVA(deep+lava: blockedTile에서 'r'로도 못 지나감, 'w'도 불가)·CRUST·BASALT·VROCK·OBSID(pick3)·HSEAL(비행도 막음)·MIRE·FLESH·BLIGHTC(pick3). 자원 obsid·blightc(G.gotObsid/gotBlightc). `openVolc`/`openBlight`(진입 시), `heartsLeft`(G.heartsDown), `heartAI`, `heartDown`, 모체는 심장이 남으면 hurtEnemy에서 무시·잠에서 못 깸. 위험 원 `addBomb`/`updBombs`/`drawBombs`(G.bombs, 저장 안 함) — 화산탄(`volcTick`)과 화염 거신 'erupt' 공용, `rockAt`. `blightZoneTick`(영역 정화·심장 번짐), blightTick은 오염지에선 진흙으로. 서리 등잔 P.lantern(updPlayer에서 앞 용암→CRUST), 정화 망토 P.cloak, 흑요석 갑옷 gear.armor 6. 보스 K.leashR(서리 거인·화염 거신·모체; 반피 소환 공용). 코어 `branch:true`(고산·화산·오염지) → 제단 조건·baseCores. 목표 `BRANCH`·`branchInfo`(QUESTS의 'branch' 한 줄이 갈래 하위 단계 id를 돌려준다). threatStage 5 = 갈래 아무거나 열림. 저장 SAVE_VER 7(맵 크기 바뀜).

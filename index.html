@@ -43,6 +43,7 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;outline:none}
 - v38 배선 조작 개편(사용자: 끌기 비직관적): 끌기 없앰. 전신주·중계탑 모드에서 커서를 올리면 가장 가까운 이어진 노드에서 커서까지의 자동 배선 계획(planChain)을 초록 점선·유령 기둥·개수·비용으로 보여 주고, 클릭 한 번에 전부 세운다(명령 chain, 하나 세울 때마다 recomputeNet). 전신주로 못 건너는 틈은 중계탑 연구가 있으면 그 한 칸만 중계탑. 배치 규칙도 '둘 중 긴 연결 거리'로 맞춤(nearConnectedNode own). 건설 모드는 이어진 노드 근처면 유지, 전신주·중계탑 고른 동안은 안 닫힘. 정제기는 재료를 30개 남기고(재개는 60개부터) 수입 숫자에서 정제기 소비를 빼고 내역에만 적는다(돌 수입이 +/−로 출렁이던 문제).
 - v39: 정제기(옛 채굴기) 제거 — 건설 목록에서 빼고 새로 못 짓게. 예전 저장에 있던 건 그대로 둔다. 정수 순환은 '본거지 생산 +1, 수리 토템 회복 +1'.
 - v40 연결망 제거(사용자 결정): 깨어 있는 코어는 모두 독립 전진기지(연결 없이 영역·생산·코어 포). 전신주는 기지 영역 안(가장자리 포함)에만 세우고 영역이 맞닿으면 그 기지에 붙는다(뿌리 코어가 잠들면 같이 꺼짐). 중계탑·자동 배선은 안 씀. 긴장감: 밤마다 전진기지마다 그 지역 무리가 따로 옴(2+0.5n, 기지 둘레 18~32칸에서, 표적 코어까지 공성 거리장), 해질녘에 방어가 가장 약한 기지를 주력 표적으로 예고(2.5배, 붉은 테). 전진기지가 무너지면 영역 안 건물은 잔해(lostK)가 되고 다시 깨울 때까지 새벽 복구 안 됨. 측정: 동굴 기지 포탑 0개면 주력에 무너짐, 2개는 하드모드 전까진 버팀, 4개는 하드모드 단계도 버팀.
+- v41 지도 설계 문서(docs/MAP_DESIGN.md, 본거지 중심 동심원 원칙·지금 지도 진단·목표 배치 제안). 절벽은 노이즈 시제품(genCliffs) 대신 프리팹 문법(PREFABS 글자 격자 + PF_RULES 배치 규칙, placePrefab이 찍고 걸어서 닿음을 검사해 아니면 되돌림): 1층·2층 단(LEDGE/LEDGE2)·절벽(CLIFF, 맞닿은 단 높이로 앞면)·계단(STAIR). 단 위 포탑 사거리 +1(고지대). 선택 바이옴 화석 협곡(사원 동쪽, 굳은 퇴적층 굴·수정 곡괭이): 사암·화석 뼈·호박, 밤엔 마른 강바닥이 물길(0.6배), 화석 랩터·호박 풍뎅이, 보스 화석 거룡(솟는 뼈 줄), 협곡 코어(optional: 제단 조건 밖), 화석 견갑·호박 조준경·고지대 축성 연구·화석 골조 벽. 지역 이름 카드(REGIONS, 0.7초 머물면, 처음 크게·다시 작게). 예전 저장은 불러올 때 ensureCanyon이 협곡 자리만 채운다.
 - v24 감사·연계·지형: 모든 광물은 장비·연구·건물 업그레이드 셋 다에 쓰인다(원칙). 태양석 → 태양 벼리기(무기 화상)·태양 장화·포탑 4단계(태양)·코어 4단계, 룬석 → 룬 갑옷·룬 곡괭이·토템 3단계·코어 4단계. 심연 각인은 포탑 5단계로 밀림. 지형 4종: 얕은 물(지상 이동 -40%, 건설 불가), 무너진 구덩이(지상은 못 지나가고 비행·투사체·시야는 지난다, 건설 불가), 발광 버섯(동굴 바닥, 밤에 주변이 밝다), 무너진 기둥(유적, 빨리 캐지고 25%로 태양석/룬석). 고대 수호 골렘은 내가 묶인 범위 밖이면 초당 최대 체력 4%를 회복(멀리서 쏘기 방지). 저장 형식 3.
 - v23 남쪽 유적(두 번째 바이옴): 맵 150×150(남쪽 확장). 수정 동굴 뒤(봉인 연 뒤) 남쪽 봉인 열쇠(수정·정수·구리) → 지상 남동쪽 두 번째 봉인 → 굴 → 무너진 유적(5×3 방 격자, 벽돌 벽·기둥, 방 사이 바위에 태양석·룬석 광맥). 고대 포탑은 처음엔 나를 쏘고(1피해, 7칸, 지형에 가리면 못 쏨), 주변 6칸에 깬 적이 없을 때 붙어서 E + 룬석 4로 되찾는다. 되찾은 고대 포탑은 영역 없이도 돌고 지을 수 없고 철거도 못 한다. 유물 상자(캐면 자원·가끔 장신구). 가운데 큰 방의 고대 수호 골렘(방어 2, 묶인 보스: 집에서 14칸 넘게 끌려가지 않음, 0.9초 예고 뒤 내려찍기 2.4칸, 반피부터 골렘 소환)을 잡아야 고대 코어(태양석+룬석 생산)를 깨울 수 있고, 제단은 다섯 코어가 모두 이어져야 응답한다. 서쪽 방 고대 균열에서 밤마다 굴쥐·돌 골렘. 새 광물은 기존 연구 갈래 4단계로 이어진다(공격 태양 렌즈: 포탑 사거리 +1·화상 / 방어 룬 각인: 벽·함정 4단계 / 코어 룬 굴착: 채굴기·전신주 4단계), 흑철 연구는 5단계로 밀림, 무기 +4는 태양석·룬석. 저장 형식 2(이전 저장은 새 판).
 - v22: 건설 바를 탭 없이 8개 한 줄(묶음별 색 띠·이름, 숫자 1~8, Q는 다음 묶음 첫 칸). 제작·연구·코어 패널의 '연구 열기'는 본거지뿐 아니라 연결된 활성 코어 근처 어디서나(workCore). 성장 선택(레벨 특성·건물 갈래·판 변주·벼리기 통합)은 사용자 결정으로 보류 — 별도 논의 예정.
@@ -71,7 +72,7 @@ const CONFIG = {
   surface: { cx: 42, cy: 50, r: 30, ringOuter: 33.6, clearR: 6, dirtAt: .62, stoneAt: .72, noiseCell: 8, copperVeins: 16, trees: 120, crackR: 28, crackAngles: [130, 230] },
   beyond: { x0: 76, x1: 146, y0: 6, y1: 94, wallP: .47, iters: 5, crystalAt: .6, crystalCell: 6, minRegion: 10 },
   player: { hp: 12, r: 5, speed: 95, dashSpeed: 340, dashTime: .15, dashCD: .9, invuln: .6, regenDelay: 3, regenEvery: 2, respawn: 5, deathLoss: .2, respawnInv: 2, digReach: 3.5, interactReach: 3.5, craftReach: 6, selectReach: 9 },
-  start: { wood: 10, stone: 10, copper: 0, crystal: 0, essence: 0, iron: 0, shard: 0, sun: 0, rune: 0, meteor: 0, pearl: 0, obsid: 0, blightc: 0 },
+  start: { wood: 10, stone: 10, copper: 0, crystal: 0, essence: 0, iron: 0, shard: 0, sun: 0, rune: 0, meteor: 0, pearl: 0, obsid: 0, blightc: 0, fossil: 0, amber: 0 },
   abyss: { size: 60, waveEvery: 12, defendWaveEvery: 7, firstWave: 8, huntBase: 40, huntPer: 2, mineNeed: 30, defendTime: 120, nests: 3, hpPer: .15, dmgPer: .08, cntPer: .10, gates: 3 },
   core: { link: 8, prodEvery: 5, reactivate: .5 },
   // v23 남쪽 유적: 직사각형 안 5×3 방 격자. 봉인은 지상 둘레 300도 방향
@@ -87,8 +88,8 @@ const CONFIG = {
   blight: { x0: 108, x1: 210, y0: 210, y1: 270, ent: 150, core: [190, 258], gate: [160, 266], hearts: [[124, 226], [198, 224], [128, 258]], sleepers: 8, rotEvery: 2.5, spreadEvery: 6 },
   ruins: { x0: 8, x1: 118, y0: 98, y1: 146, entC: 4, cells: [5, 4], sanctum: { x0: 12, y0: 135, w: 36, h: 10 }, relicChance: .6, cacheChance: .45, sleepers: 10, reclaim: { rune: 4 }, leash: 14 },
   vision: 9, revealOnSeal: 18,
-  // v34 평원 절벽 시제품(false면 안 만든다): 7칸 간격 가로 단, 높은(북쪽) 쪽 칸이 절벽, 노이즈 높은 곳은 오르막(틈)
-  cliffs: { on: true, rMin: 13, rMax: 27, sp: 7, gapAt: .72 },
+  // v41 화석 협곡(선택 바이옴): 사원 동쪽 빈 땅. 입구 굴은 사원 동쪽 가운데 줄(entY). 밤엔 마른 강바닥에 물이 차 느려진다
+  canyon: { x0: 120, x1: 211, y0: 99, y1: 148, entY: 116, core: [196, 124], gate: [176, 143], sleepers: 10, leash: 15 },
   sealFloodDelay: 20, sealAnim: .8,
   // v29 습격 예산: 밤 횟수가 아니라 진행 단계가 기본 세기를 정한다. 같은 단계 안에서는 밤마다 1씩, 최대 3까지만 오른다
   threat: { stageN: [1, 4, 7, 9, 12, 15, 17], growCap: 3, names: ['골짜기', '동굴', '사원', '숨은 바다', '하드모드', '하드모드 바이옴', '엔딩 후'] },
@@ -114,7 +115,7 @@ const TS = CONFIG.TS, WH = CONFIG.WH;
 let W = CONFIG.W, H = CONFIG.H, N = W * H;
 
 // ================= 데이터 표 =================
-const T = { GRASS: 0, DIRTF: 1, CRYF: 2, CRACK: 3, DIRT: 4, STONE: 5, COPPER: 6, CRYSTAL: 7, TREE: 8, BEDROCK: 9, SEAL: 10, NEST: 11, ALTAR: 12, IRON: 13, BLIGHT: 14, ABYSS: 15, SUN: 16, RUNE: 17, RWALL: 18, RUINF: 19, CACHE: 20, SEAL2: 21, WATER: 22, PIT: 23, GLOW: 24, RUBBLE: 25, SNOW: 26, ICEW: 27, METEOR: 28, PINE: 29, CHASM: 30, ICEF: 31, VAULTF: 32, STATUE: 33, CARPET: 34, ICES: 35, DRIFT: 36, WAYPAD: 37, DEEP: 38, SAND: 39, CORAL: 40, CLAM: 41, SEADOOR: 42, LAVA: 43, CRUST: 44, BASALT: 45, VROCK: 46, OBSID: 47, HSEAL: 48, MIRE: 49, FLESH: 50, BLIGHTC: 51, CLIFF: 52 };
+const T = { GRASS: 0, DIRTF: 1, CRYF: 2, CRACK: 3, DIRT: 4, STONE: 5, COPPER: 6, CRYSTAL: 7, TREE: 8, BEDROCK: 9, SEAL: 10, NEST: 11, ALTAR: 12, IRON: 13, BLIGHT: 14, ABYSS: 15, SUN: 16, RUNE: 17, RWALL: 18, RUINF: 19, CACHE: 20, SEAL2: 21, WATER: 22, PIT: 23, GLOW: 24, RUBBLE: 25, SNOW: 26, ICEW: 27, METEOR: 28, PINE: 29, CHASM: 30, ICEF: 31, VAULTF: 32, STATUE: 33, CARPET: 34, ICES: 35, DRIFT: 36, WAYPAD: 37, DEEP: 38, SAND: 39, CORAL: 40, CLAM: 41, SEADOOR: 42, LAVA: 43, CRUST: 44, BASALT: 45, VROCK: 46, OBSID: 47, HSEAL: 48, MIRE: 49, FLESH: 50, BLIGHTC: 51, CLIFF: 52, LEDGE: 53, LEDGE2: 54, STAIR: 55, CANF: 56, SANDST: 57, BONE: 58, AMBER: 59, SEDW: 60, WASH: 61, ALTS: 62 };
 const TILES = [
   { name: '풀', solid: false, floor: '#6fa44a', mm: '#5f8f3f' },
   { name: '흙바닥', solid: false, floor: '#9a7650', mm: '#7a5e40' },
@@ -175,11 +176,23 @@ const TILES = [
   { name: '오염 결정', solid: true, block: true, dig: 1.5, drop: ['blightc', 1], pick3: true, top: '#7a3a8a', face: '#4a1e5a', mm: '#d070f0' },
   // v34 시제품: 평원 절벽(못 지나가고 못 캔다, 비행은 넘는다). 높낮이 규칙은 없고 생김새와 길목만
   { name: '절벽', solid: true, block: true, cliff: true, top: '#6fa44a', face: '#9a6a3c', mm: '#8a6a40' },
+  // v41 프리팹 입체 구조물: 단 윗면(1층·2층)은 걸을 수 있는 높은 땅, 계단으로만 오르내린다. 단 위 포탑은 사거리 +1(고지대)
+  { name: '언덕 단', solid: false, hi: 1, mm: '#86bc5e' },
+  { name: '높은 단', solid: false, hi: 2, mm: '#a0cc78' },
+  { name: '계단', solid: false, stair: true, mm: '#c8b48a' },
+  // v41 화석 협곡
+  { name: '협곡 바닥', solid: false, floor: '#c49a6a', mm: '#b88c5c' },
+  { name: '사암', solid: true, block: true, dig: 1, drop: ['stone', 1], top: '#8a5436', face: '#5e3420', mm: '#6e4028' },
+  { name: '화석 뼈', solid: true, block: true, dig: 1.1, drop: ['fossil', 1], top: '#e8dcc0', face: '#a89878', mm: '#efe4c8' },
+  { name: '호박 광맥', solid: true, block: true, dig: 1.4, drop: ['amber', 1], pick2: true, top: '#8a5436', face: '#5e3420', mm: '#ffa830' },
+  { name: '굳은 퇴적층', solid: true, block: true, dig: 2.2, pick3: true, top: '#9a7c5c', face: '#5e4630', mm: '#6a5038' },
+  { name: '마른 강바닥', solid: false, floor: '#a08670', wash: true, mm: '#94806c' },
+  { name: '옛 제단', solid: true, block: true, top: '#d8ccb0', face: '#8a7a5a', mm: '#e0d4b0' },
 ];
-const RES = { wood: { name: '나무', col: '#c8955a' }, stone: { name: '돌', col: '#b8b4ac' }, copper: { name: '구리', col: '#e0874a' }, crystal: { name: '수정', col: '#7fd6ff' }, essence: { name: '정수', col: '#d27ae8' }, iron: { name: '흑철', col: '#a8b8c8' }, shard: { name: '심연 파편', col: '#a89aff' }, sun: { name: '태양석', col: '#ffb43a' }, rune: { name: '룬석', col: '#4ae0c8' }, meteor: { name: '운철', col: '#9fb4d0' }, pearl: { name: '진주', col: '#f0e6d8' }, obsid: { name: '흑요석', col: '#a88ad8' }, blightc: { name: '오염 결정', col: '#d070f0' } };
+const RES = { wood: { name: '나무', col: '#c8955a' }, stone: { name: '돌', col: '#b8b4ac' }, copper: { name: '구리', col: '#e0874a' }, crystal: { name: '수정', col: '#7fd6ff' }, essence: { name: '정수', col: '#d27ae8' }, iron: { name: '흑철', col: '#a8b8c8' }, shard: { name: '심연 파편', col: '#a89aff' }, sun: { name: '태양석', col: '#ffb43a' }, rune: { name: '룬석', col: '#4ae0c8' }, meteor: { name: '운철', col: '#9fb4d0' }, pearl: { name: '진주', col: '#f0e6d8' }, obsid: { name: '흑요석', col: '#a88ad8' }, blightc: { name: '오염 결정', col: '#d070f0' }, fossil: { name: '화석', col: '#e8dcc0' }, amber: { name: '호박', col: '#ffa830' } };
 // 건물: lv[0]은 지을 때, lv[1..]은 업그레이드(up 비용, tech 필요 연구)
 const STRUCTURES = {
-  wall:    { name: '벽', grp: 'def', cost: { stone: 3 }, block: true, lv: [{ name: '돌벽', hp: 50 }, { name: '다듬은 돌벽', hp: 120, up: { stone: 6 }, tech: 'def1' }, { name: '수정 보강벽', hp: 260, up: { stone: 6, crystal: 3 }, tech: 'def3' }, { name: '룬 각인 벽', hp: 420, up: { stone: 6, rune: 4 }, tech: 'defS', thorns: 2 }] },
+  wall:    { name: '벽', grp: 'def', cost: { stone: 3 }, block: true, lv: [{ name: '돌벽', hp: 50 }, { name: '다듬은 돌벽', hp: 120, up: { stone: 6 }, tech: 'def1' }, { name: '수정 보강벽', hp: 260, up: { stone: 6, crystal: 3 }, tech: 'def3' }, { name: '룬 각인 벽', hp: 420, up: { stone: 6, rune: 4 }, tech: 'defS', thorns: 2 }, { name: '화석 골조 벽', hp: 560, up: { stone: 6, fossil: 5, amber: 2 }, tech: 'defH', thorns: 2 }] },
   trap:    { name: '가시 함정', grp: 'def', cost: { wood: 4, stone: 2 }, block: false, lv: [{ name: '가시 함정', hp: 30, dmg: 1, slow: .2 }, { name: '독가시 함정', hp: 40, dmg: 2, slow: .4, up: { wood: 6, stone: 6 }, tech: 'def1' }, { name: '수정 가시 함정', hp: 50, dmg: 3, slow: .5, up: { stone: 6, crystal: 3 }, tech: 'def3' }, { name: '룬 가시 함정', hp: 70, dmg: 4, slow: .6, up: { stone: 4, rune: 3 }, tech: 'defS' }] },
   totem:   { name: '수리 토템', grp: 'def', cost: { copper: 5, stone: 12 }, block: true, tech: 'def2', lv: [{ name: '수리 토템', hp: 40, heal: 2, radius: 4 }, { name: '큰 수리 토템', hp: 60, heal: 4, radius: 5, up: { copper: 4, crystal: 6 }, tech: 'def3' }, { name: '룬 수리 토템', hp: 90, heal: 6, radius: 6, up: { rune: 5, crystal: 4 }, tech: 'defS' }] },
   xbow:    { name: '석궁 포탑', grp: 'atk', cost: { wood: 6, copper: 4 }, block: true, turret: 'bolt', lv: [{ name: '석궁 포탑', hp: 40, dmg: 2, cd: .6, range: 7 }, { name: '연발 석궁 포탑', hp: 60, dmg: 3, cd: .45, range: 8, up: { wood: 8, stone: 4, copper: 3 }, tech: 'atk1' }, { name: '수정촉 석궁 포탑', hp: 80, dmg: 4, cd: .35, range: 9, pierce: 1, perk: '관통 1 — 화살이 적 하나를 더 뚫는다', up: { stone: 6, crystal: 6, copper: 4 }, tech: 'atk3' }, { name: '태양촉 석궁 포탑', hp: 100, dmg: 5, cd: .32, range: 9, pierce: 1, up: { sun: 6, copper: 4 }, tech: 'atkS' }, { name: '심연 각인 석궁 포탑', hp: 140, dmg: 7, cd: .28, range: 10, pierce: 2, perk: '관통 2', up: { shard: 12, iron: 8 }, abyss: true }] },
@@ -225,6 +238,7 @@ const RESEARCH = [
   { id: 'ecoS', grp: 'eco', tier: 4, name: '룬 굴착', cost: { rune: 10, sun: 10 }, req: ['eco3'], needsRuin: true, desc: '전신주 4단계(영역 6칸), 코어 4단계' },
   { id: 'atk4', grp: 'atk', tier: 5, name: '흑철 포신', cost: { iron: 15, copper: 8, pearl: 6 }, req: ['atkS'], needsIron: true, desc: '모든 포탑 피해 +2, 사거리 +1칸' },
   { id: 'def4', grp: 'def', tier: 5, name: '흑철 장갑', cost: { iron: 15, stone: 20 }, req: ['defS'], needsIron: true, desc: '건물이 받는 피해 30% 더 감소' },
+  { id: 'defH', grp: 'def', tier: 5, name: '고지대 축성', cost: { fossil: 12, amber: 8, stone: 20 }, needsCanyon: true, desc: '단(높은 땅) 위 포탑 사거리가 1칸 더 늘어난다(합 +2). 벽 5단계(화석 골조 벽)' },
   { id: 'eco4', grp: 'eco', tier: 5, name: '심연 채굴', cost: { iron: 12, crystal: 12, meteor: 6 }, req: ['ecoS'], needsIron: true, desc: '코어 생산 +1, 코어 포 사거리 +2칸' },
   { id: 'ess1', grp: 'ess', tier: 1, name: '정수 탄두', cost: { essence: 5 }, needsEss: true, desc: '모든 포탑·코어 포 피해 +1' },
   { id: 'ess2', grp: 'ess', tier: 1, name: '정수 갑피', cost: { essence: 5 }, needsEss: true, desc: '건물·코어가 받는 피해 30% 감소' },
@@ -298,6 +312,8 @@ const RECIPES = [
   { id: 'lantern', grp: '도구', name: '서리 등잔', cost: { iron: 6, pearl: 6, crystal: 8 }, vis: () => G.hard, lockTxt: '봉인의 수호자를 쓰러뜨리면 열린다', give: p => { p.lantern = true; say2('용암 쪽으로 걸어가면 앞의 용암이 식어 길이 된다 (화산 균열)'); }, has: p => p.lantern, desc: '들고 용암으로 걸어가면 바로 앞 용암이 식은 용암 길이 된다(길은 남는다). 화산 균열의 코어 섬으로 가는 길' },
   { id: 'armor5', grp: '방어구', name: '흑요석 갑옷', cost: { obsid: 12, iron: 8 }, req: 'armor4', vis: () => G.gotObsid, lockTxt: '흑요석을 얻으면 열린다 (화산 균열)', give: p => { p.gear.armor = 6; p.max += 4; p.hp += 4; }, has: p => p.gear.armor >= 6, desc: '최대 체력 +4, 화산탄·폭발 피해 절반' },
   { id: 'cloak', grp: '방어구', name: '정화 망토', cost: { blightc: 10, pearl: 4, essence: 4 }, vis: () => G.gotBlightc, lockTxt: '오염 결정을 얻으면 열린다 (오염지)', give: p => { p.cloak = true; p.max += 2; p.hp += 2; }, has: p => p.cloak, desc: '오염된 땅을 밟아도 부식되지 않는다. 최대 체력 +2' },
+  { id: 'bonemail', grp: '방어구', name: '화석 견갑', cost: { fossil: 12, amber: 4, copper: 6 }, vis: () => G.gotFossil, lockTxt: '화석을 얻으면 열린다 (화석 협곡)', give: p => { p.bonemail = true; p.max += 3; p.hp += 3; }, has: p => p.bonemail, desc: '최대 체력 +3. 단(높은 땅) 위에 서 있으면 받는 피해 1 감소(최소 1)' },
+  { id: 'amberscope', grp: '도구', name: '호박 조준경', cost: { amber: 10, fossil: 4, copper: 4 }, vis: () => G.gotFossil, lockTxt: '호박을 얻으면 열린다 (화석 협곡)', give: p => { p.amberscope = true; p.mods = accMods(p); }, has: p => p.amberscope, desc: '석궁 사거리 +25%' },
   { id: 'pick4', grp: '도구', name: '룬 곡괭이', cost: { rune: 10, sun: 4, crystal: 6 }, req: 'pick3', vis: () => G.gotRuin, lockTxt: RUIN_LOCK, give: p => p.gear.pick4 = 1, has: p => p.gear.pick4, desc: '캐기 2.6배 빠르게, 손이 3칸 더 닿는다' },
 ];
 // v24 장비 수치는 여기 한 곳에서 읽는다(이동·돌진·캐기·손 닿는 거리)
@@ -352,6 +368,9 @@ const ENEMIES = {
   blightling: { name: '오염 새끼', hp: 9, speed: 72, r: 4.5, dmg: 2, sdmg: 3, cd: .8, col: '#a04a90', drop: { blightc: [.15, 1], essence: [.05, 1] } },
   heart: { name: '오염 심장', hp: 260, speed: 0, r: 9, dmg: 0, sdmg: 0, cd: 1, armor: 1, col: '#c0407a', heart: true, drop: { blightc: [5, 1] } },
   mother: { name: '오염 모체', stag: 560, hp: 1400, speed: 26, r: 9, dmg: 4, sdmg: 25, cd: 1.2, armor: 1, col: '#8a3a7a', boss: true, leash: true, leashR: 16 },
+  raptor: { name: '화석 랩터', hp: 13, speed: 96, r: 5, dmg: 2, sdmg: 3, cd: .75, col: '#d8c8a0', drop: { fossil: [.25, 1], copper: [.3, 1] } },
+  scarab: { name: '호박 풍뎅이', hp: 16, speed: 34, r: 6.5, dmg: 2, sdmg: 7, cd: 1.1, armor: 2, col: '#d08a2a', siege: true, drop: { amber: [.3, 1], stone: [.5, 1] } },
+  wyrm:   { name: '화석 거룡', stag: 420, hp: 900, speed: 30, r: 9, dmg: 4, sdmg: 25, cd: 1.3, armor: 1, col: '#e8dcc0', boss: true, leash: true, leashR: 15 },
   wisp:   { name: '수정 정령', hp: 4, speed: 60, r: 4.5, dmg: 2, sdmg: 2, cd: .8, fly: true, col: '#bfe8ff', drop: { crystal: [.35, 1] } },
 };
 const CORE_DEFS = [
@@ -364,6 +383,8 @@ const CORE_DEFS = [
   { name: '산정 코어', x: 196, y: 50, prod: 'meteor', prod2: 'stone', cost: { meteor: 6, crystal: 10, sun: 4 }, high: true, branch: true },
   { name: '화산 코어', x: 86, y: 258, prod: 'obsid', prod2: 'iron', cost: { obsid: 6, iron: 6, crystal: 10 }, volc: true, branch: true },
   { name: '오염지 코어', x: 190, y: 258, prod: 'blightc', prod2: 'essence', cost: { blightc: 6, essence: 6, crystal: 10 }, blight: true, branch: true },
+  // v41 선택 바이옴: 제단 조건(모든 코어)에 들지 않는다
+  { name: '협곡 코어', x: 196, y: 124, prod: 'fossil', prod2: 'amber', cost: { fossil: 6, amber: 4, crystal: 10 }, canyon: true, optional: true },
 ];
 const NESTS = [[138, 22], [138, 78]];
 
@@ -406,8 +427,8 @@ const SFX = (() => {
 function sfxAt(n, x, y) { if (P && Math.hypot(x - P.x, y - P.y) > 22 * CONFIG.TS) return; SFX.play(n); }
 function shade(hex, k) { const n = parseInt(hex.slice(1), 16); return `rgb(${clamp((n >> 16) * k, 0, 255) | 0},${clamp(((n >> 8) & 255) * k, 0, 255) | 0},${clamp((n & 255) * k, 0, 255) | 0})`; }
 // v23 구역: 'surface' 지상(굴 포함) · 'cave' 수정 동굴 · 'ruin' 남쪽 유적. y를 안 주면 x만 본다(예전 호출)
-function zoneAt(x, y) { if (LAYER && LAYER.kind === 'abyss') return 'cave'; if (y !== undefined && y >= CONFIG.volc.y0) return x <= CONFIG.volc.x1 + 1 ? 'volc' : 'blight'; if (y !== undefined && y >= CONFIG.sea.y0) return 'sea'; const R = CONFIG.ruins; if (y !== undefined && y >= R.y0 && x >= R.x0 && x <= R.x1) return 'ruin'; if (x > CONFIG.beyond.x1) return 'high'; return x >= CONFIG.beyond.x0 ? 'cave' : 'surface'; }
-const digFloor = (x, y) => { const z = zoneAt(x, y); return z === 'ruin' ? T.RUINF : z === 'cave' ? T.CRYF : z === 'volc' ? T.BASALT : z === 'blight' ? T.MIRE : z === 'high' ? T.SNOW : T.DIRTF; };
+function zoneAt(x, y) { if (LAYER && LAYER.kind === 'abyss') return 'cave'; if (y !== undefined && y >= CONFIG.volc.y0) return x <= CONFIG.volc.x1 + 1 ? 'volc' : 'blight'; if (y !== undefined && y >= CONFIG.sea.y0) return 'sea'; if (y !== undefined && y >= CONFIG.canyon.y0 && y <= CONFIG.canyon.y1 && x > CONFIG.ruins.x1) return 'canyon'; const R = CONFIG.ruins; if (y !== undefined && y >= R.y0 && x >= R.x0 && x <= R.x1) return 'ruin'; if (x > CONFIG.beyond.x1) return 'high'; return x >= CONFIG.beyond.x0 ? 'cave' : 'surface'; }
+const digFloor = (x, y) => { const z = zoneAt(x, y); return z === 'ruin' ? T.RUINF : z === 'cave' ? T.CRYF : z === 'volc' ? T.BASALT : z === 'blight' ? T.MIRE : z === 'high' ? T.SNOW : z === 'canyon' ? T.CANF : T.DIRTF; };
 
 // ================= 상태 =================
 let tile, coreGrid, structGrid, seen, vis, terrConn, terrAny, fieldG, fieldF, fieldS;
@@ -655,14 +676,16 @@ function gen() {
   genSea(rng);
   genVolc(rng);
   genBlight(rng);
-  genCliffs();
+  genCanyon(mulberry(seed + 5151));
   const passS = (x, y, j) => !solidT(tile[j]);
   const carveTo = (x0, y0) => { const n = Math.ceil(Math.hypot(C.cx - x0, C.cy - y0)); for (let k = 0; k <= n; k++) { const x = Math.round(lerp(x0, C.cx, k / n)), y = Math.round(lerp(y0, C.cy, k / n)); for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const j = idx(x + dx, y + dy), t = tile[j]; if (dC(x + dx, y + dy) <= C.r && [T.DIRT, T.STONE, T.COPPER, T.TREE, T.CLIFF].includes(t)) tile[j] = T.GRASS; } } };
   for (const pt of [...gates.filter(g => g.type === 'crack' && !g.ruin && !g.high).map(g => [g.x, g.y]), [C.cx + C.r - 1, C.cy], [42, 29]]) {
     const m = new Uint8Array(N); flood(C.cx, C.cy, m, passS);
     if (!m[idx(pt[0], pt[1])] || solidT(tile[idx(pt[0], pt[1])])) { if (tile[idx(pt[0], pt[1])] !== T.CRACK) tile[idx(pt[0], pt[1])] = T.GRASS; carveTo(pt[0], pt[1]); }
   }
+  surfPrefabs = genSurfacePrefabs(mulberry(seed + 6161));
 }
+let surfPrefabs = [];
 
 // v30 사원(동굴 아래): 바위로 채운 직사각형에 5×4 격자 방. 입구는 위 오른쪽 칸(동굴 남쪽 끝 두 번째 봉인에서 내려온다),
 // 성소는 아래 왼쪽 두 칸을 합친 큰 방(카펫 통로 끝 제단, 고대 코어, 열주). 방은 깊이 우선 신장 트리(12% 덤 통로)로 잇고,
@@ -926,26 +949,202 @@ function genBlight(rg) {
   gates.push({ type: 'crack', x: B.gate[0], y: B.gate[1], open: false, blight: true });
 }
 let volcStair = null, blightStair = null;
-function genCliffs() {
-  const K = CONFIG.cliffs, C = CONFIG.surface; if (!K || !K.on) return; const sd = (seed + 911) % 9973;
-  // 남쪽을 보는 계단식 단: 단 높이는 북쪽일수록 높고, 경계선은 x를 따라 출렁인다(사진 같은 가로 절벽 줄)
-  const lvl = (x, y) => -Math.floor((y + 7 * vnoise(x, Math.floor(y / K.sp), 10, sd)) / K.sp), ok = (x, y) => { const d = Math.hypot(x - C.cx, y - C.cy); return d >= K.rMin && d <= K.rMax; };
-  const far = [[42, 26], [C.cx + C.r, C.cy], ...[...CONFIG.extraCracks.map(c => c.ang), ...C.crackAngles].map(an => [Math.round(C.cx + Math.cos(an * Math.PI / 180) * C.crackR), Math.round(C.cy - Math.sin(an * Math.PI / 180) * C.crackR)])];
-  for (let y = C.cy - K.rMax; y <= C.cy + K.rMax; y++) for (let x = C.cx - K.rMax; x <= C.cx + K.rMax; x++) {
-    if (!inb(x, y) || !ok(x, y)) continue; const i = idx(x, y), t = tile[i]; if (t !== T.GRASS && t !== T.TREE && t !== T.DIRTF) continue;
-    if (far.some(([a, b]) => Math.hypot(x - a, y - b) < 4.5)) continue; if (vnoise(x, y, 5, sd + 7) > K.gapAt) continue;
-    const L = lvl(x, y); if (lvl(x, y + 1) < L || lvl(x - 1, y) < L || lvl(x + 1, y) < L) tile[i] = T.CLIFF;
+// ================= v41 프리팹: 미리 만든 조각 + 배치 규칙 =================
+// 글자 한 칸 = 타일 한 칸. '.' 건드리지 않음 · '_' 구역 바닥 · '#' 구역 벽이어야 함(그대로 둔다) · 1/2 단 윗면 · C 절벽 · S 계단
+// T 석상 · A 옛 제단 · X 유물 상자 · W 고대 벽돌 · K 카펫 · f 옛 돌바닥 · B 화석 뼈 · M 호박 광맥 · R 잔해
+// 절벽은 아래 칸이 자기보다 낮을 때만 앞면을 그리므로, 조각을 돌리거나 뒤집어도 그림을 따로 만들지 않는다
+const PF_T = { '1': T.LEDGE, '2': T.LEDGE2, C: T.CLIFF, S: T.STAIR, T: T.STATUE, A: T.ALTS, X: T.CACHE, W: T.RWALL, K: T.CARPET, f: T.RUINF, B: T.BONE, M: T.AMBER, R: T.RUBBLE };
+const PREFABS = {
+  // 평원·협곡: 한 층짜리 언덕 단(계단 둘)
+  hill_a: { name: '언덕 단', rows: [
+    '..CCCCCC...',
+    '.CC1111CCC.',
+    'CC11111111C',
+    'C111111111C',
+    'S111111111C',
+    'CC1111111CC',
+    '.CCCSSCCCC.'] },
+  // 평원: 두 층 언덕(아래층 계단 → 위층 계단)
+  hill_b: { name: '두 층 언덕', rows: [
+    '..CCCCC...',
+    '.CC222CC..',
+    'CC22222CCC',
+    'C1CCSCC11C',
+    'C11111111C',
+    'CCCSCCCCCC'] },
+  statues: { name: '길가 석상', rows: ['T___T'] },
+  altar_s: { name: '작은 제단', rows: [
+    '.T_T.',
+    'T___T',
+    '__A__',
+    'T___T',
+    '.T_T.'] },
+  // 협곡: 큰 메사(2층). 아래층 계단 둘, 위층 계단 하나
+  mesa: { name: '메사', rows: [
+    '....CCCCCCCCCC....',
+    '..CCC11111111CCC..',
+    '.CC111111111111CC.',
+    'CC11CCCCCCCCC111CC',
+    'C111C2222222CC111C',
+    'S111C22222222C111C',
+    'C111C22222222C111C',
+    'C111CCCSSCCCCC111C',
+    'C1111111111111111C',
+    'CC11111111111111CC',
+    '.CCCC111111CCCSSCC',
+    '....CCCCCCCC......'] },
+  // 협곡 벽에 붙는 계단식 단(위 줄 '#'이 벽이어야 한다)
+  terrace: { name: '계단식 단', rows: [
+    '###########',
+    'C222222222C',
+    'C222222222C',
+    'CCCCSSCCCCC',
+    'C111111111C',
+    'C111111111C',
+    'CCCCCCCSSCC'] },
+  ribcage: { name: '화석 갈비뼈', rows: [
+    '..B..B..B..B....',
+    '.B..B..B..B..BB.',
+    'BBBBBBBBBBBBBBBB',
+    '.B..B..B..B..BB.',
+    '..B..B..B..B....'] },
+  shrine: { name: '무너진 신전', rows: [
+    'WWWW.WWWW',
+    'WffTfTffW',
+    'WfffKfffW',
+    'RffKKKffW',
+    'WfffKfffW',
+    'WfTfXfTfW',
+    'WWWf_fWWW'] },
+};
+// 배치 규칙: 구역마다 어떤 조각을 몇 개(n). rock이면 구역 벽도 깎고 들어간다(벽에 반쯤 묻힌 단). 덮어도 되는 바닥(on)·피할 점은 genXxx가 넘긴다
+const PF_RULES = {
+  surface: [{ id: 'hill_a', n: 1, rock: true }, { id: 'hill_b', n: 1, rock: true }, { id: 'altar_s', n: 1 }, { id: 'statues', n: 2 }],
+  canyon: [{ id: 'mesa', n: 2, rock: true }, { id: 'terrace', n: 3, rock: true }, { id: 'ribcage', n: 3 }, { id: 'shrine', n: 1, rock: true }, { id: 'hill_a', n: 2, rock: true }],
+};
+const pfLevel = ch => ch === '1' ? 1 : ch === '2' ? 2 : ch === 'C' || ch === 'S' || ch === '#' ? -1 : 0;
+// 조각 돌리기(r번 90도)·뒤집기
+function pfShape(rows, r, flip) {
+  let g = rows.map(s => s.split('')); const w = Math.max(...rows.map(s => s.length)); g = g.map(a => { while (a.length < w) a.push('.'); return a; });
+  if (flip) g = g.map(a => a.slice().reverse());
+  for (let k = 0; k < r; k++) { const h = g.length, w2 = g[0].length, ng = []; for (let x = 0; x < w2; x++) { const row = []; for (let y = h - 1; y >= 0; y--) row.push(g[y][x]); ng.push(row); } g = ng; }
+  return g;
+}
+// 조각 자체 검사: 단 윗면은 절벽·계단·같은 층 단으로만 둘러싸여야 하고, 계단은 한쪽이 한 층 높고 반대쪽이 한 층 낮아야 한다
+function prefabErrors(id) {
+  const g = pfShape(PREFABS[id].rows, 0, false), h = g.length, w = g[0].length, at = (x, y) => x < 0 || y < 0 || x >= w || y >= h ? '.' : g[y][x], err = [];
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const ch = g[y][x], L = pfLevel(ch);
+    if (L > 0) for (const [dx, dy] of D4) { const n = at(x + dx, y + dy), nL = pfLevel(n); if (nL >= 0 && nL !== L && !PF_T[n]) err.push(`${x},${y} 단이 낮은 땅에 바로 닿음`); if (nL > 0 && nL !== L) err.push(`${x},${y} 층이 바로 맞닿음`); }
+    if (ch === 'S') { const pairs = [[at(x, y - 1), at(x, y + 1)], [at(x - 1, y), at(x + 1, y)]].map(([a, b]) => [pfLevel(a), pfLevel(b)]).filter(([a, b]) => a >= 0 && b >= 0 && Math.abs(a - b) === 1); if (!pairs.length) err.push(`${x},${y} 계단 양쪽 높이가 안 맞음`); }
   }
+  return err;
+}
+// 높이: 평지 0 · 1층 1 · 2층 2. 절벽은 맞닿은 단 가운데 가장 높은 층(없으면 1, 예전 시제품 절벽)
+const hiOf = (x, y) => inb(x, y) ? TILES[tile[idx(x, y)]].hi || 0 : 0;
+function cliffLv(x, y) { let m = 0; for (const [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [-1, 1], [1, -1], [-1, -1]]) m = Math.max(m, hiOf(x + dx, y + dy)); return m || 1; }
+function lvAt(x, y) { if (!inb(x, y)) return 0; const t = tile[idx(x, y)]; return t === T.CLIFF ? cliffLv(x, y) : TILES[t].hi || 0; }
+const isHighTile = i => !!TILES[tile[i]].hi;
+// 걸어서 닿는 칸(지상 적 기준). inZ 안에서만 센다
+function pfReach(inZ, sx, sy) { const m = new Uint8Array(N), q = [idx(sx, sy)]; if (solidT(tile[q[0]])) return m; m[q[0]] = 1; while (q.length) { const i = q.pop(), x = i % W, y = (i / W) | 0; for (const [dx, dy] of D4) { const nx = x + dx, ny = y + dy; if (!inZ(nx, ny)) continue; const j = idx(nx, ny), t = tile[j]; if (m[j] || solidT(t) || TILES[t].pit || TILES[t].deep || TILES[t].lava) continue; m[j] = 1; q.push(j); } } return m; }
+// 조각 하나 찍기: 맞는 자리면 찍고, 찍은 뒤에 원래 닿던 칸이 하나라도 끊기거나 새 단 위에 못 올라가면 되돌린다
+function placePrefab(id, x0, y0, r, flip, o) {
+  const g = pfShape(PREFABS[id].rows, r, flip), h = g.length, w = g[0].length;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const ch = g[y][x]; if (ch === '.') continue; const X = x0 + x, Y = y0 + y; if (!o.inZ(X, Y)) return false; const i = idx(X, Y), t = tile[i]; if (structGrid[i] >= 0) return false; if (ch === '#') { if (!solidT(t) || t === T.BEDROCK) return false; } else if (!o.on.includes(t)) return false; }
+  if (o.placed.some(([a, b, c, d]) => x0 < c + o.gap && x0 + w + o.gap > a && y0 < d + o.gap && y0 + h + o.gap > b)) return false;
+  if (o.avoid.some(([ax, ay, ar]) => ax > x0 - ar && ax < x0 + w + ar && ay > y0 - ar && ay < y0 + h + ar)) return false;
+  const before = o.reach(), put = [];
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const ch = g[y][x]; if (ch === '.' || ch === '#') continue; const i = idx(x0 + x, y0 + y); put.push([i, tile[i]]); tile[i] = ch === '_' ? o.floor : PF_T[ch]; }
+  const after = o.reach(); let ok = true;
+  for (const [i] of put) if (!solidT(tile[i]) && !after[i]) { ok = false; break; }
+  if (ok) for (let i = 0; i < N; i++) if (before[i] && !after[i] && !solidT(tile[i])) { ok = false; break; }
+  if (!ok) { for (let k = put.length - 1; k >= 0; k--) tile[put[k][0]] = put[k][1]; return false; }
+  o.placed.push([x0, y0, x0 + w, y0 + h, id]); return true;
+}
+// 규칙대로 구역에 조각들을 찍는다. box=[x0,y0,x1,y1] 후보 범위, entry=걸어서 닿음을 재는 시작점
+function placeRules(zone, rg, o) {
+  o.placed = o.placed || []; o.gap = o.gap ?? 2; o.reach = () => pfReach(o.inZ, o.entry[0], o.entry[1]); const out = [];
+  for (const R of PF_RULES[zone]) for (let k = 0, tries = 0, o2 = R.rock && o.rock ? { ...o, on: o.on.concat(o.rock) } : o; k < R.n && tries < (o.tries || 60); tries++) {
+    const r = Math.floor(rg() * 4), flip = rg() < .5, g = pfShape(PREFABS[R.id].rows, r, flip), [bx0, by0, bx1, by1] = o.box;
+    const x = bx0 + Math.floor(rg() * Math.max(1, bx1 - bx0 - g[0].length)), y = by0 + Math.floor(rg() * Math.max(1, by1 - by0 - g.length));
+    if (placePrefab(R.id, x, y, r, flip, o2)) { k++; out.push([R.id, x, y]); }
+  }
+  return out;
+}
+// 평원 조각(예전 노이즈 절벽 시제품 genCliffs를 대신한다). 본거지·풀숲 코어·균열·봉인에서 떨어진 풀밭에만
+function genSurfacePrefabs(rg) {
+  const C = CONFIG.surface, inZ = (x, y) => inb(x, y) && Math.hypot(x - C.cx, y - C.cy) <= C.r;
+  const avoid = [[C.cx, C.cy, 9], [42, 26, 6], [C.cx + C.r, C.cy, 6], ...gates.filter(g => g.type === 'crack' && !g.ruin && !g.high && !g.sea && !g.volc && !g.blight && !g.canyon).map(g => [g.x, g.y, 5])];
+  return placeRules('surface', rg, { inZ: (x, y) => inZ(x, y) && Math.hypot(x - C.cx, y - C.cy) <= C.r - 2, on: [T.GRASS, T.TREE, T.DIRTF], rock: [T.STONE, T.DIRT], tries: 150, floor: T.GRASS, avoid, entry: [C.cx, C.cy + 2], box: [C.cx - C.r + 2, C.cy - C.r + 2, C.cx + C.r - 2, C.cy + C.r - 2] });
+}
+
+// v41 화석 협곡(사원 동쪽, 선택 바이옴): 사암 속을 동서로 굽이치는 골짜기, 가운데 마른 강바닥(밤엔 물이 차 느려진다),
+// 메사·계단식 단·화석 갈비뼈·무너진 신전 조각. 입구는 사원 동쪽 가운데 방에서 뚫은 굴(굳은 퇴적층, 수정 곡괭이)
+function genCanyon(rg) {
+  const K = CONFIG.canyon, sd = seed % 9973, inC = (x, y) => x > K.x0 && x < K.x1 && y > K.y0 && y < K.y1, [kx, ky] = K.core;
+  for (let y = K.y0; y <= K.y1; y++) for (let x = K.x0; x <= K.x1; x++) tile[idx(x, y)] = inC(x, y) ? T.SANDST : T.BEDROCK;
+  const ex = K.x0 + 1, ey = K.entY, ph = rg() * 6.283, L = kx - ex;
+  const mid = x => { const t = clamp((x - ex) / L, 0, 1), s = t * t * (3 - 2 * t); return lerp(ey, ky, s) + Math.sin(t * Math.PI) * (9 * Math.sin(x * .06 + ph) + 5 * (vnoise(x, 0, 9, sd + 501) - .5)); };
+  for (let x = ex; x <= Math.min(K.x1 - 2, kx + 6); x++) { const c = mid(x), hw = (5 + 6 * vnoise(x, 1, 8, sd + 502)) * Math.min(1, (x - ex) / 12 + .35); for (let y = Math.floor(c - hw); y <= Math.ceil(c + hw); y++) if (inC(x, y)) tile[idx(x, y)] = Math.abs(y - c) <= 1.1 + vnoise(x, y, 4, sd + 503) * .9 && x > ex + 6 ? T.WASH : T.CANF; }
+  const clr = (cx, cy, r, t = T.CANF) => { for (let y = Math.floor(cy - r); y <= cy + r; y++) for (let x = Math.floor(cx - r); x <= cx + r; x++) if (inC(x, y) && Math.hypot(x - cx, y - cy) + (hash(x, y, 504) - .5) * .8 <= r) tile[idx(x, y)] = t; };
+  // 코어 분지(보스 자리 포함)와 균열 자리
+  clr(kx, ky - 3, 10); clr(K.gate[0], K.gate[1], 3.5);
+  // 곁골짜기: 본류에서 남북으로 갈라져 막다른 굴(상자·호박)
+  const pockets = [];
+  for (let k = 0, tr = 0; k < 4 && tr < 40; tr++) { const x = ex + 14 + Math.floor(rg() * (L - 30)), dir = rg() < .5 ? -1 : 1; let cx = x, cy = Math.round(mid(x)); const len = 10 + rg() * 12; let okG = true;
+    for (let st = 0; st < len; st++) { cy += dir; cx += Math.round((vnoise(cx, cy, 5, sd + 505 + k) - .5) * 2.4); if (!inC(cx, cy) || cy < K.y0 + 4 || cy > K.y1 - 4) { okG = false; break; } for (let w = -1; w <= 1; w++) if (inC(cx + w, cy)) tile[idx(cx + w, cy)] = T.CANF; }
+    if (!okG || Math.hypot(cx - kx, cy - ky) < 16) continue; clr(cx, cy, 3); pockets.push([cx, cy]); k++; }
+  // 균열까지 이어지는 남쪽 협곡
+  { let cx = K.gate[0] - 16, cy = mid(cx); while (cy < K.gate[1]) { for (let w = -1; w <= 1; w++) for (let v = -1; v <= 0; v++) if (inC(cx + w, Math.round(cy) + v)) tile[idx(cx + w, Math.round(cy) + v)] = T.CANF; cy += 1; cx += Math.sign(K.gate[0] - cx) * (rg() < .6 ? 1 : 0); } }
+  // 입구 굴: 협곡 서쪽 끝에서 사원 동쪽 가운데 방까지(폭 3). 사원 밖 4칸은 굳은 퇴적층
+  canyonTunnel();
+  // 벽 속 화석·호박
+  const rock = (x, y) => inC(x, y) && tile[idx(x, y)] === T.SANDST;
+  veins(T.AMBER, 12, [3, 6], (x, y) => rock(x, y) && D4.some(([dx, dy]) => !solidT(tile[idx(x + dx, y + dy)]) || hash(x, y, 506) < .3), () => 1, rg);
+  for (let y = K.y0 + 1; y < K.y1; y++) for (let x = K.x0 + 1; x < K.x1; x++) if (rock(x, y) && D4.some(([dx, dy]) => !solidT(tile[idx(x + dx, y + dy)])) && hash(x, y, 507) < .05) tile[idx(x, y)] = T.BONE;
+  veins(T.COPPER, 6, [3, 6], rock, () => 1, rg);
+  const ent = [K.x0 + 2, ey];
+  branchCarve(inC, ent, [[kx, ky + 2], K.gate, ...pockets], t => !solidT(t), (X, Y) => { const j = idx(X, Y); if (solidT(tile[j])) tile[j] = T.CANF; });
+  // 조각: 코어 분지·균열·입구·곁골짜기 끝은 피한다
+  const avoid = [[kx, ky - 3, 12], [K.gate[0], K.gate[1], 5], [ent[0], ent[1], 8], ...pockets.map(([a, b]) => [a, b, 4])];
+  canyonPrefabs = placeRules('canyon', rg, { inZ: inC, on: [T.CANF, T.WASH], rock: [T.SANDST], tries: 220, floor: T.CANF, avoid, entry: ent, box: [K.x0 + 2, K.y0 + 1, K.x1 - 1, K.y1 - 1] });
+  for (const [a, b] of pockets) if (rg() < .8) { const t = tile[idx(a, b + 2)]; if (!solidT(t)) tile[idx(a, b + 2)] = T.CACHE; }
+  gates.push({ type: 'crack', x: K.gate[0], y: K.gate[1], open: false, canyon: true });
+}
+let canyonPrefabs = [];
+// v41 이전 저장: 협곡 자리가 아직 기반암이면 그 자리에만 협곡을 만들어 넣고 코어를 붙인다(다른 땅은 그대로)
+function ensureCanyon() {
+  const K = CONFIG.canyon; if (cores.some(c => c.canyon) || tile[idx(K.core[0], K.core[1])] !== T.BEDROCK) return false;
+  genCanyon(mulberry(seed + 5151));
+  const d = CORE_DEFS.find(q => q.canyon), k = cores.length, c = { ...d, k, lv: 0, isCore: true, state: 'dormant', connected: false, woken: false, flash: 0, ph: rnd(0, 6), cd: 0, ang: 0 }, L = coreLv(c); c.max = L.hp; c.hp = 0; c.r = L.r;
+  for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const i = idx(c.x + dx, c.y + dy); if (solidT(tile[i])) tile[i] = T.CANF; coreGrid[i] = k; }
+  cores.push(c); for (let y = K.y0 - 1; y <= K.y1 + 1; y++) for (let x = CONFIG.ruins.x1 - 30; x <= K.x1 + 1; x++) paintFloor(x, y);
+  G.ver++; G.mmDirty = true; G.netDirty = true; return true;
+}
+// 사원 쪽 입구 굴. 저장을 불러올 때도 쓰므로 사원 방 목록 없이 타일만 보고 판다
+function canyonTunnel() {
+  const K = CONFIG.canyon, R = CONFIG.ruins, ey = K.entY;
+  for (let x = K.x0 + 3; x > R.x0 + 1; x--) { let hit = false;
+    for (let dy = -1; dy <= 1; dy++) { const y = ey + dy, j = idx(x, y); if (x > R.x1 - 1 && x <= K.x0 + 1) tile[j] = T.SEDW; else if (x > K.x0 + 1) tile[j] = T.CANF; else { if (!solidT(tile[j])) hit = true; else tile[j] = T.RUINF; } }
+    if (hit) break; }
 }
 
 // ================= 바닥 레이어(오프스크린) =================
 let off, o;
-function floorColor(x, y) { const t = tile[idx(x, y)]; if (TILES[t].floor) return TILES[t].floor; const z = zoneAt(x, y); return z === 'cave' ? '#24223a' : z === 'ruin' ? '#4a4232' : z === 'sea' ? '#4a6a70' : z === 'volc' ? '#2e2828' : z === 'blight' ? '#3e3836' : z === 'high' ? '#dfe7ec' : (t === T.TREE ? '#6fa44a' : '#4a3a2a'); }
+// v41 단 윗면 색: 구역 바닥을 층마다 밝게
+const hexMul = (hex, k) => '#' + [16, 8, 0].map(b => clamp(Math.round(((parseInt(hex.slice(1), 16) >> b) & 255) * k), 0, 255).toString(16).padStart(2, '0')).join('');
+function ledgeCol(z, lv) { return z === 'canyon' ? (lv >= 2 ? '#ecd0a4' : '#dcb88a') : z === 'surface' ? (lv >= 2 ? '#94c86a' : '#82b85a') : hexMul(z === 'cave' ? '#3a3858' : z === 'ruin' ? '#6a604a' : z === 'high' ? '#e4ecf2' : '#5a4a3a', lv >= 2 ? 1.25 : 1.12); }
+function floorColor(x, y) { const t = tile[idx(x, y)]; if (TILES[t].floor) return TILES[t].floor; const z = zoneAt(x, y); if (TILES[t].hi) return ledgeCol(z, TILES[t].hi); if (t === T.STAIR) return hexMul(ledgeCol(z, 1), .88); return z === 'cave' ? '#24223a' : z === 'ruin' ? '#4a4232' : z === 'sea' ? '#4a6a70' : z === 'volc' ? '#2e2828' : z === 'blight' ? '#3e3836' : z === 'high' ? '#dfe7ec' : z === 'canyon' ? '#b8875a' : (t === T.TREE ? '#6fa44a' : '#4a3a2a'); }
 function paintFloor(x, y) {
   if (!inb(x, y)) return;
   const i = idx(x, y), t = tile[i], px = x * TS, py = y * TS, h = hash(x, y, 3);
   o.fillStyle = shade(floorColor(x, y), .9 + h * .18); o.fillRect(px, py, TS, TS);
   if (t === T.GRASS || t === T.TREE) { o.fillStyle = 'rgba(40,90,20,.4)'; if (h < .35) { o.fillRect(px + 3 + h * 20, py + 6, 1, 3); o.fillRect(px + 4 + h * 20, py + 5, 1, 3); } if (h > .8) { o.fillStyle = h > .93 ? '#f0e08a' : '#e8a0c0'; o.fillRect(px + 10, py + 10, 2, 2); } }
+  if (TILES[t].hi && zoneAt(x, y) === 'surface') { o.fillStyle = 'rgba(40,90,20,.35)'; if (h < .4) { o.fillRect(px + 3 + h * 20, py + 6, 1, 3); o.fillRect(px + 4 + h * 20, py + 5, 1, 3); } }
+  if (TILES[t].hi && zoneAt(x, y) !== 'surface') { o.fillStyle = 'rgba(90,50,20,.18)'; if (h < .35) o.fillRect(px + 3 + h * 18, py + 5, 4, 1); if (h > .75) o.fillRect(px + 9, py + 11, 3, 1); }
+  if (t === T.STAIR) { const ns = hiOf(x, y - 1) !== hiOf(x, y + 1) || !(hiOf(x - 1, y) !== hiOf(x + 1, y)); for (let k = 0; k < 4; k++) { o.fillStyle = 'rgba(0,0,0,.22)'; if (ns) o.fillRect(px + 1, py + 3 + k * 4, TS - 2, 1); else o.fillRect(px + 3 + k * 4, py + 1, 1, TS - 2); o.fillStyle = 'rgba(255,240,210,.22)'; if (ns) o.fillRect(px + 1, py + 2 + k * 4, TS - 2, 1); else o.fillRect(px + 2 + k * 4, py + 1, 1, TS - 2); } o.fillStyle = 'rgba(0,0,0,.25)'; if (ns) { o.fillRect(px, py, 1, TS); o.fillRect(px + TS - 1, py, 1, TS); } else { o.fillRect(px, py, TS, 1); o.fillRect(px, py + TS - 1, TS, 1); } }
+  if (t === T.CANF) { o.fillStyle = 'rgba(90,50,20,.2)'; if (h < .3) o.fillRect(px + 3 + h * 20, py + 5, 2, 1); if (h > .7) o.fillRect(px + 9, py + 10, 3, 1); o.fillStyle = 'rgba(255,230,190,.18)'; if (h > .9) o.fillRect(px + 5, py + 12, 2, 1); }
+  if (t === T.WASH) { o.fillStyle = 'rgba(60,40,26,.3)'; for (let k = 0; k < 3; k++) { const a = hash(x, y, 520 + k), b = hash(x, y, 530 + k); o.fillRect(px + 2 + a * 11, py + 2 + b * 11, 2, 1); } o.fillStyle = 'rgba(220,200,170,.25)'; if (h > .6) o.fillRect(px + 4, py + 7, 5, 1); const up = inb(x, y - 1) && tile[idx(x, y - 1)] !== T.WASH && !solidT(tile[idx(x, y - 1)]); if (up) { o.fillStyle = 'rgba(70,46,26,.35)'; o.fillRect(px, py, TS, 2); } }
   if (t === T.DIRTF) { o.fillStyle = 'rgba(60,40,20,.25)'; if (h < .4) o.fillRect(px + 4, py + 8, 5, 1); if (h > .7) o.fillRect(px + 9, py + 3, 2, 2); }
   if (t === T.CRYF) { o.fillStyle = 'rgba(140,160,240,.14)'; if (h < .25) o.fillRect(px + 5, py + 6, 2, 2); if (h > .85) { o.fillStyle = 'rgba(127,214,255,.35)'; o.fillRect(px + 10, py + 11, 1, 1); } }
   if (t === T.WATER) { o.fillStyle = 'rgba(160,210,240,.18)'; if (h < .4) o.fillRect(px + 3 + h * 8, py + 6, 5, 1); if (h > .6) o.fillRect(px + 2, py + 11, 6, 1); const up = inb(x, y - 1) && !TILES[tile[idx(x, y - 1)]].water && !solidT(tile[idx(x, y - 1)]); if (up) { o.fillStyle = 'rgba(220,240,255,.35)'; o.fillRect(px, py, TS, 1); } }
@@ -980,7 +1179,7 @@ function initCores(defs = CORE_DEFS) {
   cores = defs.map((d, k) => {
     const c = { ...d, k, lv: 0, isCore: true, state: d.home ? 'active' : 'dormant', connected: !!d.home, woken: !!d.home, flash: 0, ph: rnd(0, 6), cd: 0, ang: 0 };
     const L = coreLv(c); c.max = L.hp; c.hp = d.home ? L.hp : 0; c.r = L.r;
-    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const i = idx(c.x + dx, c.y + dy); if (solidT(tile[i]) || TILES[tile[i]].deep) tile[i] = d.ruin ? T.RUINF : d.sea ? T.SAND : d.volc ? T.BASALT : d.blight ? T.MIRE : d.high ? T.SNOW : d.beyond || d.abyss ? T.CRYF : T.GRASS; coreGrid[i] = k; }
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const i = idx(c.x + dx, c.y + dy); if (solidT(tile[i]) || TILES[tile[i]].deep) tile[i] = d.ruin ? T.RUINF : d.sea ? T.SAND : d.volc ? T.BASALT : d.blight ? T.MIRE : d.high ? T.SNOW : d.canyon ? T.CANF : d.beyond || d.abyss ? T.CRYF : T.GRASS; coreGrid[i] = k; }
     return c;
   });
 }
@@ -1020,7 +1219,7 @@ function recomputeNet() {
   cores.forEach(c => { if (c.connected) c.everConnected = true; });
   G.mmDirty = true;
 }
-const ORE = { [T.STONE]: 'stone', [T.COPPER]: 'copper', [T.CRYSTAL]: 'crystal', [T.IRON]: 'iron', [T.ABYSS]: 'shard', [T.SUN]: 'sun', [T.RUNE]: 'rune', [T.METEOR]: 'meteor', [T.CLAM]: 'pearl', [T.OBSID]: 'obsid', [T.BLIGHTC]: 'blightc' }, ORE_RANK = { obsid: 4.2, blightc: 4.3, pearl: 3.5, stone: 1, copper: 2, crystal: 3, sun: 3.3, rune: 3.6, meteor: 3.8, iron: 4, shard: 5 };
+const ORE = { [T.STONE]: 'stone', [T.COPPER]: 'copper', [T.CRYSTAL]: 'crystal', [T.IRON]: 'iron', [T.ABYSS]: 'shard', [T.SUN]: 'sun', [T.RUNE]: 'rune', [T.METEOR]: 'meteor', [T.CLAM]: 'pearl', [T.OBSID]: 'obsid', [T.BLIGHTC]: 'blightc', [T.AMBER]: 'amber', [T.BONE]: 'fossil' }, ORE_RANK = { fossil: 3.1, amber: 3.4, obsid: 4.2, blightc: 4.3, pearl: 3.5, stone: 1, copper: 2, crystal: 3, sun: 3.3, rune: 3.6, meteor: 3.8, iron: 4, shard: 5 };
 const RUIN_RES = k => k === 'sun' || k === 'rune';
 function gotRuinRes() { if (G.gotRuin) return; G.gotRuin = true; say('사원 광물을 얻었다 · 4단계 연구와 무기 +4가 열렸다', false, '#ffd890'); }
 function oreNear(tx, ty) { let best = null; for (const [dx, dy] of D4) { if (!inb(tx + dx, ty + dy)) continue; const r = ORE[tile[idx(tx + dx, ty + dy)]]; if (r && (!best || ORE_RANK[r] > ORE_RANK[best])) best = r; } return best; }
@@ -1057,9 +1256,9 @@ function gateSeeds(g) {
 }
 function pathOK(extra) {
   const pass = j => { if (j === extra || solidT(tile[j]) || TILES[tile[j]].pit || TILES[tile[j]].deep || coreGrid[j] >= 0) return false; const s = structGrid[j]; return !(s >= 0 && !structs[s].dead && structs[s].D.block); };
-  const gl = gates.filter(g => !g.dead && !(g.type === 'nest' && !g.open) && !(g.ruin && !g.open) && !(g.high && !g.open) && !g.sea && !g.volc && !g.blight).map(gateSeeds);
+  const gl = gates.filter(g => !g.dead && !(g.type === 'nest' && !g.open) && !(g.ruin && !g.open) && !(g.high && !g.open) && !(g.canyon && !g.open) && !g.sea && !g.volc && !g.blight).map(gateSeeds);
   for (const c of cores) {
-    if (c.state !== 'active' || c.sea || c.volc || c.blight) continue;
+    if (c.state !== 'active' || c.sea || c.volc || c.blight || (c.canyon && !G.canyonOpen)) continue;
     const mark = new Uint8Array(N), q = [];
     for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) { if (Math.abs(dx) < 2 && Math.abs(dy) < 2) continue; const x = c.x + dx, y = c.y + dy; if (!inb(x, y)) continue; const j = idx(x, y); if (pass(j)) { mark[j] = 1; q.push(j); } }
     while (q.length) { const i = q.pop(), x = i % W, y = (i / W) | 0; for (const [dx, dy] of D4) { const nx = x + dx, ny = y + dy; if (!inb(nx, ny)) continue; const j = idx(nx, ny); if (!mark[j] && pass(j)) { mark[j] = 1; q.push(j); } } }
@@ -1214,13 +1413,13 @@ function drawSlots(sw, sh) {
   uFont(12, 500); ctx.textAlign = 'center'; uText('Esc·P: 지금 월드로 돌아가기 · 게임 중엔 P(메뉴)에서 다시 연다', x + w / 2, y + h - 18, INK2); ctx.textAlign = 'left';
 }
 // 체크포인트: 이정표(코어 각성·봉인·보스)를 넘긴 뒤 첫 새벽의 저장을 따로 보관. 본거지가 무너지면 여기로 돌아간다
-function cpMilestone() { const w = cores.filter(c => c.woken && !c.home); const ms = [[true, '첫 새벽'], [w.length >= 1, w.length ? w[w.length - 1].name + ' 각성' : ''], [G.sealOpen, '봉인 개방'], [G.guardianDown, '봉인의 수호자 처치'], [G.seal2Open, '사원 봉인 개방'], [G.colossusDown, '고대 수호 골렘 처치'], [G.seaOpen, '숨은 바다 진입'], [G.leviDown, '심해 군주 처치'], [G.highOpen, '고산지대 진입'], [G.giantDown, '서리 거인 처치'], [G.volcOpen, '화산 균열 진입'], [G.flameDown, '화염 거신 처치'], [G.blightOpen, '오염지 진입'], [G.motherDown, '오염 모체 처치'], [G.postGame, '봉인의 주인 처치']]; const sig = [w.length, G.sealOpen, G.guardianDown, G.seal2Open, G.colossusDown, G.seaOpen, G.leviDown, G.highOpen, G.giantDown, G.volcOpen, G.flameDown, G.blightOpen, G.motherDown, G.postGame].map(Number).join(''); let label = '첫 새벽'; for (const [ok, t] of ms) if (ok && t) label = t; return { sig, label }; }
+function cpMilestone() { const w = cores.filter(c => c.woken && !c.home); const ms = [[true, '첫 새벽'], [w.length >= 1, w.length ? w[w.length - 1].name + ' 각성' : ''], [G.sealOpen, '봉인 개방'], [G.guardianDown, '봉인의 수호자 처치'], [G.seal2Open, '사원 봉인 개방'], [G.colossusDown, '고대 수호 골렘 처치'], [G.seaOpen, '숨은 바다 진입'], [G.leviDown, '심해 군주 처치'], [G.highOpen, '고산지대 진입'], [G.giantDown, '서리 거인 처치'], [G.volcOpen, '화산 균열 진입'], [G.flameDown, '화염 거신 처치'], [G.blightOpen, '오염지 진입'], [G.motherDown, '오염 모체 처치'], [G.canyonOpen, '화석 협곡 진입'], [G.wyrmDown, '화석 거룡 처치'], [G.postGame, '봉인의 주인 처치']]; const sig = [w.length, G.sealOpen, G.guardianDown, G.seal2Open, G.colossusDown, G.seaOpen, G.leviDown, G.highOpen, G.giantDown, G.volcOpen, G.flameDown, G.blightOpen, G.motherDown, G.postGame, !!G.canyonOpen, !!G.wyrmDown].map(Number).join(''); let label = '첫 새벽'; for (const [ok, t] of ms) if (ok && t) label = t; return { sig, label }; }
 function writeCheckpoint() { try { const d = localStorage.getItem(SAVE_KEY); if (!d) return false; localStorage.setItem(CP_KEY, JSON.stringify({ label: G.cpLabel, nights: G.nights, runT: G.runT, data: d })); return true; } catch (e) { return false; } }
 function readCheckpoint() { try { return JSON.parse(localStorage.getItem(CP_KEY) || 'null'); } catch (e) { return null; } }
 function autoSave() { if (!G.over && G.runT - (G.lastSave || 0) >= 20) { G.lastSave = G.runT; if (saveGame(true) && G.cpWant && LAYER.kind === 'valley') { G.cpWant = false; if (writeCheckpoint()) say2(`체크포인트 저장 — ${G.cpLabel}`); } } }
 function clearCheckpoint() { try { localStorage.removeItem(CP_KEY); } catch (e) { } }
 function restoreCheckpoint() { const cp = readCheckpoint(); if (!cp) return false; try { localStorage.setItem(SAVE_KEY, cp.data); } catch (e) { return false; } if (!loadGame()) return false; say('체크포인트로 돌아왔다', true); say2(`${cp.label} 직후 새벽부터 다시 · 그 뒤에 얻은 것은 사라졌다`); return true; }
-const G_RUN = ['stats', 'statT', 'spent', 'lostR', 'postGame', 'tablets', 'bestDepth', 'gotCrystal', 'gotEss', 'gotIron', 'hard', 'guardianDown', 'colossusDown', 'gotRuin', 'gotMeteor', 'highOpen', 'giantDown', 'purified', 'ruinDawn', 'thStage', 'thStart', 'padOn', 'gotPearl', 'seaOpen', 'leviDown', 'seaStair', 'hints', 'runT', 'nestMax', 'later', 'uid', 'bsel', 'cpSig', 'cpLabel', 'volcOpen', 'blightOpen', 'flameDown', 'motherDown', 'heartsDown', 'gotObsid', 'gotBlightc', 'volcStair', 'blightStair'];
+const G_RUN = ['stats', 'statT', 'spent', 'lostR', 'postGame', 'tablets', 'bestDepth', 'gotCrystal', 'gotEss', 'gotIron', 'hard', 'guardianDown', 'colossusDown', 'gotRuin', 'gotMeteor', 'highOpen', 'giantDown', 'purified', 'ruinDawn', 'thStage', 'thStart', 'padOn', 'gotPearl', 'seaOpen', 'leviDown', 'seaStair', 'hints', 'runT', 'nestMax', 'later', 'uid', 'bsel', 'cpSig', 'cpLabel', 'volcOpen', 'blightOpen', 'flameDown', 'motherDown', 'heartsDown', 'canyonOpen', 'wyrmDown', 'gotFossil', 'zSeen', 'gotObsid', 'gotBlightc', 'volcStair', 'blightStair'];
 const b64 = a => { let s2 = ''; for (let i = 0; i < a.length; i += 8192) s2 += String.fromCharCode.apply(null, a.subarray(i, i + 8192)); return btoa(s2); };
 const unb64 = (str, Ctor) => { const s2 = atob(str), a = new Ctor(s2.length); for (let i = 0; i < s2.length; i++) a[i] = s2.charCodeAt(i); return a; };
 function packLayer(L) {
@@ -1266,7 +1465,9 @@ function loadGame() {
     const f = data.run.finale; if (f) G.finale = { type: f.type, t: f.t, pulse: f.pulse, boss: layers.valley.enemies[f.bi] || null };
     P = { ...data.P, intent: { mvx: 0, mvy: 0, mx: 0, my: 0, attack: false, dig: false }, mods: {} }; P.mods = accMods(P);
     state.players = [P]; state.G = G;
-    LAYER = null; useLayer(layers[data.cur] || layers.valley);
+    for (const k in CONFIG.start) if (res[k] == null) res[k] = 0;
+    LAYER = null; useLayer(layers.valley); ensureCanyon(); LAYER = null;
+    useLayer(layers[data.cur] || layers.valley);
     recomputeNet(); rebuildFlow(); updateFog(); cam.x = P.x; cam.y = P.y;
     closePanels(); renderMinimap(true);
     const mins = Math.floor(G.runT / 60); say('이어서 한다', true); say2(`${mins}분째 판을 불러왔다 · 새로 하려면 R을 두 번`);
@@ -1292,7 +1493,7 @@ function newGame() {
   state.players = [P]; state.G = G; refreshMods(P);
   recomputeNet(); rebuildFlow(); updateFog();
   cam.x = P.x; cam.y = P.y;
-  say('봉인된 골짜기', true); say2('나무·돌·구리를 모아 코어 옆(C)에서 봉인 열쇠를 만들어라');
+  say2('나무·돌·구리를 모아 코어 옆(C)에서 봉인 열쇠를 만들어라');
   closePanels(); renderMinimap(true); saveGame(true);
 }
 
@@ -1352,12 +1553,12 @@ function applyCommand(pid, cmd) {
     case 'unsalvage': { const ls = p.lastSalvage; if (!ls || res.essence < 1 || p.bag.length >= 24) break; res.essence -= 1; p.bag.push(ls.a); p.lastSalvage = null; SFX.play('click'); say(`${ACC[ls.a.id].name} 되돌림`); break; }
   }
 }
-const resAvail = R => (!R.req || R.req.every(q => tech[q])) && (!R.needsCrystal || G.gotCrystal) && (!R.needsEss || G.gotEss) && (!R.needsIron || G.gotIron) && (!R.needsRuin || G.gotRuin);
+const resAvail = R => (!R.req || R.req.every(q => tech[q])) && (!R.needsCrystal || G.gotCrystal) && (!R.needsEss || G.gotEss) && (!R.needsIron || G.gotIron) && (!R.needsRuin || G.gotRuin) && (!R.needsCanyon || G.gotFossil);
 function nearBase(p) { const ti = tileOf(p.x, p.y); if (terrConn[ti]) return true; const tx = p.x / TS, ty = p.y / TS; for (const s of structs) if (!s.dead && isNode(s) && s.connected && Math.hypot(s.x + .5 - tx, s.y + .5 - ty) <= pylonLink(s) + 4) return true; for (const c of cores) if (c.state === 'active' && c.connected && Math.hypot(c.x + .5 - tx, c.y + .5 - ty) <= c.r + 4) return true; return false; }
 // v22: 제작·연구는 본거지뿐 아니라 연결된 활성 코어 어디서나
 const workCore = p => cores.find(c => c.state === 'active' && c.connected && Math.hypot(p.x - coreCenter(c)[0], p.y - coreCenter(c)[1]) <= CONFIG.player.craftReach * TS) || null;
 const nearHome = p => !!workCore(p);
-const coreLock = c => c.ruin && !G.colossusDown ? '고대 수호 골렘이 코어를 붙들고 있다' : c.sea && !G.leviDown ? '심해 군주가 코어를 붙들고 있다' : c.high && !G.giantDown ? '서리 거인이 코어를 붙들고 있다' : c.volc && !G.flameDown ? '화염 거신이 코어를 붙들고 있다' : c.blight && !G.motherDown ? (heartsLeft() ? '오염 심장이 살아 있는 한 모체가 코어를 붙들고 있다' : '오염 모체가 코어를 붙들고 있다') : null;
+const coreLock = c => c.ruin && !G.colossusDown ? '고대 수호 골렘이 코어를 붙들고 있다' : c.sea && !G.leviDown ? '심해 군주가 코어를 붙들고 있다' : c.high && !G.giantDown ? '서리 거인이 코어를 붙들고 있다' : c.volc && !G.flameDown ? '화염 거신이 코어를 붙들고 있다' : c.blight && !G.motherDown ? (heartsLeft() ? '오염 심장이 살아 있는 한 모체가 코어를 붙들고 있다' : '오염 모체가 코어를 붙들고 있다') : c.canyon && !G.wyrmDown ? '화석 거룡이 코어를 붙들고 있다' : null;
 function nearDormant(p) { for (const c of cores) if (c.state === 'dormant') { const [cx, cy] = coreCenter(c); if (Math.hypot(p.x - cx, p.y - cy) <= CONFIG.player.interactReach * TS) return c; } return null; }
 function nearSeal(p) {
   if (G.sealOpen) return false;
@@ -1405,6 +1606,7 @@ function interact(p) {
     else if (c.high) { floods.push({ t: G.clock + CONFIG.floodCore.delay, spec: { wolf: 8 }, high: true, warned: false }); say2('설원 틈에서 늑대 울음이 들린다. 곧 몰려온다'); }
     else if (c.volc) { floods.push({ t: G.clock + CONFIG.floodCore.delay, spec: { salamander: 7 }, volc: true, warned: false }); say2('용암 틈이 끓는다. 곧 몰려온다'); }
     else if (c.blight) { floods.push({ t: G.clock + CONFIG.floodCore.delay, spec: { blightling: 12 }, blight: true, warned: false }); say2('오염 균열이 꿈틀거린다. 곧 몰려온다'); }
+    else if (c.canyon) { floods.push({ t: G.clock + CONFIG.floodCore.delay, spec: { raptor: 7, scarab: 2 }, canyon: true, warned: false }); say2('협곡 틈에서 뼈 긁는 소리가 난다. 곧 몰려온다'); }
     else if (c.beyond) { floods.push({ t: G.clock + CONFIG.floodCore.delay, spec: { beetle: CONFIG.floodCore.beetle, wisp: CONFIG.floodCore.wisp }, warned: false }); say2('둥지가 울린다. 곧 몰려온다'); }
     else say2('전진기지가 됐다 — 이제 밤마다 이곳도 습격받는다. 포탑을 세워 두라');
     return;
@@ -1430,6 +1632,7 @@ function eTarget(p) {
 }
 function accMods(p) {
   const m = { dig: 0, swordFlat: 0, xbowRange: 0, pierce: 0, spd: 0, dashMul: 1, repair: 0, mendAura: 0, hunter: 0, hunterHeal: 0, glass: 0, glassTaken: 0, bloodHeal: 0, maxHp: 0, keeper: 0, build: 0, nestDmg: 0, nestEss: 0, vision: 0, turretSpd: 0, gamble: 0, minerSet: 0 };
+  if (p.amberscope) m.xbowRange += .25;
   const eq = p.eq, rings = [eq.ring0, eq.ring1].filter(Boolean), set = rings.length === 2 && rings[0].id === rings[1].id && !ACC[rings[0].id].noSet ? rings[0].id : null;
   for (const a of [...rings, eq.neck, eq.charm]) {
     if (!a) continue; const v = accVal(a, 'v');
@@ -1511,6 +1714,7 @@ function openSeal2() {
   const R = CONFIG.ruins;
   for (const g of gates) if (g.ruin && !g.dead) { g.open = true; setTile(g.x, g.y, T.CRACK); for (let yy = g.y - 2; yy <= g.y + 2; yy++) for (let xx = g.x - 2; xx <= g.x + 2; xx++) seen[idx(xx, yy)] = 1; }
   floods.push({ t: G.clock + CONFIG.sealFloodDelay, spec: { rat: 6, golem: 2 }, ruin: true, warned: false });
+  G.later.push({ t: G.runT + 14, m: '사원 동쪽 가운데 방, 굳은 흙벽 틈으로 마른 바람이 샌다 — 너머에 화석 협곡이 있다 (선택 지역)' });
   const C = cores.find(c => c.ruin), [bx, by] = C ? [(C.x + 9.5) * TS, (C.y + .5) * TS] : [0, 0];
   if (C) { const b = makeEnemy('colossus', bx, by, true); b.sleep = true; b.home = [bx, by]; }
   for (let k = 0, tries = 0; k < R.sleepers && tries < 4000; tries++) {
@@ -1544,7 +1748,7 @@ function threatPreview() { const T2 = CONFIG.threat, st = threatStage(), start =
 function threatN() { const T2 = CONFIG.threat, st = threatStage(); if (G.thStage !== st) { G.thStage = st; G.thStart = G.nights; } return T2.stageN[st] + Math.min(Math.max(0, G.nights - (G.thStart || 0)), T2.growCap); }
 // v40 전진기지 습격: 밤마다 깨어 있는 전진기지마다 그 지역 무리가 따로 온다(기지 수만큼 전선이 늘어난다).
 // 해질녘에 방어가 가장 약한 기지 하나를 '주력 표적'으로 예고하고 거기엔 2.5배가 몰린다. 무리는 표적 코어까지의 공성 거리장을 따라간다
-const RAID_UNITS = { surface: ['rat', 'rat', 'brute', 'bomber'], cave: ['beetle', 'beetle', 'wisp', 'hex'], ruin: ['rat', 'golem', 'bomber'], sea: ['wisp', 'wisp', 'bomber'], high: ['wolf', 'wolf', 'hex'], volc: ['salamander', 'salamander', 'bomber'], blight: ['blightling', 'blightling', 'blightling', 'hex'] };
+const RAID_UNITS = { surface: ['rat', 'rat', 'brute', 'bomber'], cave: ['beetle', 'beetle', 'wisp', 'hex'], ruin: ['rat', 'golem', 'bomber'], sea: ['wisp', 'wisp', 'bomber'], high: ['wolf', 'wolf', 'hex'], volc: ['salamander', 'salamander', 'bomber'], blight: ['blightling', 'blightling', 'blightling', 'hex'], canyon: ['raptor', 'raptor', 'scarab'] };
 CONFIG.raid = { base: 2, per: .5, mainMul: 2.5, minD: 18, maxD: 32 };
 function baseDefense(c) { let v = 0; for (const s2 of structs) if (!s2.dead && !s2.hostile && Math.hypot(s2.x - c.x, s2.y - c.y) <= c.r + 3) v += s2.D.turret ? 2 + s2.lv : s2.type === 'wall' ? .15 : s2.type === 'lamp' || s2.type === 'totem' ? 1 : 0; return v + c.lv; }
 function pickRaidTarget() {
@@ -1572,6 +1776,7 @@ function spawnNight() {
     else if (g.type === 'crack' && g.high) { rep('wolf', 3 + Math.floor(n / 2), list); if (n >= 5) rep('hex', 1, list); }
     else if (g.type === 'crack' && g.volc) { rep('salamander', 3 + Math.floor(n / 2), list); if (n >= 6) rep('bomber', 1, list); }
     else if (g.type === 'crack' && g.blight) { rep('blightling', 4 + n, list); if (n >= 5) rep('hex', 1, list); }
+    else if (g.type === 'crack' && g.canyon) { rep('raptor', 3 + Math.floor(n / 2), list); rep('scarab', 1 + Math.floor(n / 4), list); }
     else if (g.type === 'crack' && g.abyss) { rep('shade', 3 + Math.floor(n / 2), list); rep('brute', 1 + Math.floor(n / 3), list); rep('bomber', 1 + Math.floor(n / 3), list); }
     else if (g.type === 'crack') { rep('rat', Wv.ratBase + Wv.ratPer * n, list); if (n >= Wv.bruteFrom) rep('brute', Math.floor(n / 2), list); if (n >= 2) rep('bomber', 1 + Math.floor((n - 2) / 2), list); if (n >= 3) rep('hook', Math.floor((n - 1) / 2), list); }
     else { rep('beetle', Wv.beetleBase + Wv.beetlePer * n, list); rep('wisp', Wv.wispBase + Math.floor(Wv.wispPer * n), list); if (n >= 3) rep('hex', 1 + Math.floor((n - 3) / 3), list); }
@@ -1583,9 +1788,9 @@ function spawnNight() {
 function spawnFlood(spec, ruinOnly) {
   for (const g of gates) {
     if (!g.open) continue; const list = [];
-    const tag = g.ruin ? 'ruin' : g.high ? 'high' : g.sea ? 'sea' : g.volc ? 'volc' : g.blight ? 'blight' : '', want = ruinOnly === true ? 'ruin' : ruinOnly || ''; if (g.abyss || tag !== want) continue;
+    const tag = g.ruin ? 'ruin' : g.high ? 'high' : g.sea ? 'sea' : g.volc ? 'volc' : g.blight ? 'blight' : g.canyon ? 'canyon' : '', want = ruinOnly === true ? 'ruin' : ruinOnly || ''; if (g.abyss || tag !== want) continue;
     if (g.high) { for (let k = 0; k < (spec.wolf || 0); k++) list.push('wolf'); queueGate(g, list); continue; }
-    if (g.volc || g.blight) { for (const k2 of ['salamander', 'blightling']) for (let k = 0; k < (spec[k2] || 0); k++) list.push(k2); queueGate(g, list); continue; }
+    if (g.volc || g.blight || g.canyon) { for (const k2 of ['salamander', 'blightling', 'raptor', 'scarab']) for (let k = 0; k < (spec[k2] || 0); k++) list.push(k2); queueGate(g, list); continue; }
     if (g.sea) { for (let k = 0; k < (spec.wisp || 0); k++) list.push('wisp'); for (let k = 0; k < (spec.lurker || 0); k++) list.push('lurker'); queueGate(g, list); continue; }
     if (g.type === 'nest') { for (let k = 0; k < (spec.beetle || 0); k++) list.push('beetle'); for (let k = 0; k < (spec.wisp || 0); k++) list.push('wisp'); }
     else { for (let k = 0; k < (spec.rat || 0); k++) list.push('rat'); for (let k = 0; k < (spec.golem || 0); k++) list.push('golem'); }
@@ -1765,7 +1970,7 @@ function openSea() {
   for (const g of gates) if (g.sea && !g.dead) { g.open = true; setTile(g.x, g.y, T.CRACK); }
   const b = makeEnemy('leviathan', (SE.boss[0] + .5) * TS, (SE.boss[1] + .5) * TS, true); if (b) { b.sleep = true; b.home = [b.x, b.y]; b.under = true; }
   for (let k = 0, tries = 0; k < SE.sleepers && tries < 6000; tries++) { const x = ri(SE.x0 + 4, SE.x1 - 4), y = ri(SE.y0 + 4, SE.y1 - 4); if (tile[idx(x, y)] !== T.DEEP || Math.hypot(x - SE.boss[0], y - SE.boss[1]) < 12 || y < SE.y0 + 12) continue; const e = makeEnemy('lurker', (x + .5) * TS, (y + .5) * TS); if (e) k++; }
-  say('사원 아래 — 숨은 바다', true, '#bfefff'); say2(P.raft ? '깊은 물은 뗏목으로 건넌다. 물속 매복꾼이 가까이 오면 떠오른다' : '깊은 물을 건너려면 뗏목이 필요하다 (C · 도구)'); SFX.play('seal');
+  say2(P.raft ? '깊은 물은 뗏목으로 건넌다. 물속 매복꾼이 가까이 오면 떠오른다' : '깊은 물을 건너려면 뗏목이 필요하다 (C · 도구)'); SFX.play('seal');
 }
 function swimAI(e, dt, dP) {
   const K = e.K, near = P.alive && dP < 9 * TS; e.surf = near || e.flash > 0;
@@ -1793,7 +1998,7 @@ function openVolc() {
   for (const g of gates) if (g.volc && !g.dead) { g.open = true; setTile(g.x, g.y, T.CRACK); }
   const [cx, cy] = V.core, b = makeEnemy('flamegiant', (cx + .5) * TS, (cy - 2.5) * TS, true); if (b) { b.sleep = true; b.home = [b.x, b.y]; }
   for (let k = 0, tries = 0; k < V.sleepers && tries < 4000; tries++) { const x = ri(V.x0 + 3, V.x1 - 3), y = ri(V.y0 + 3, V.y1 - 3); if (tile[idx(x, y)] !== T.BASALT || Math.hypot(x - cx, y - cy) < 12 || Math.hypot(x - V.ent, y - V.y0) < 10) continue; const e = makeEnemy('salamander', (x + .5) * TS, (y + .5) * TS); if (e) { e.sleep = true; k++; } }
-  say('바다 밑 — 화산 균열', true, '#ffb080'); say2(P.lantern ? '서리 등잔을 든 채 용암으로 걸어가면 식어 길이 된다. 영역 밖에선 화산탄이 떨어진다' : '용암은 서리 등잔(C · 도구)이 있어야 식혀 건넌다. 영역 밖에선 화산탄이 떨어진다'); SFX.play('seal');
+  say2(P.lantern ? '서리 등잔을 든 채 용암으로 걸어가면 식어 길이 된다. 영역 밖에선 화산탄이 떨어진다' : '용암은 서리 등잔(C · 도구)이 있어야 식혀 건넌다. 영역 밖에선 화산탄이 떨어진다'); SFX.play('seal');
 }
 function openBlight() {
   const B = CONFIG.blight; G.blightOpen = true; G.mmDirty = true;
@@ -1801,7 +2006,7 @@ function openBlight() {
   for (const [hx, hy] of B.hearts.slice(G.heartsDown || 0)) makeEnemy('heart', (hx + .5) * TS, (hy + .5) * TS, true);
   const [cx, cy] = B.core, m = makeEnemy('mother', (cx + .5) * TS, (cy - 4.5) * TS, true); if (m) { m.sleep = true; m.home = [m.x, m.y]; }
   for (let k = 0, tries = 0; k < B.sleepers && tries < 4000; tries++) { const x = ri(B.x0 + 3, B.x1 - 3), y = ri(B.y0 + 3, B.y1 - 3); if (solidT(tile[idx(x, y)]) || Math.hypot(x - cx, y - cy) < 12 || Math.hypot(x - B.ent, y - B.y0) < 10) continue; const e = makeEnemy('blightling', (x + .5) * TS, (y + .5) * TS); if (e) { e.sleep = true; k++; } }
-  say('바다 밑 — 오염지', true, '#f0b0e0'); say2('영역 밖 오염된 땅(보라)을 밟으면 부식된다. 전신주로 영역을 넓히면 오염이 밀려난다'); SFX.play('seal');
+  say2('영역 밖 오염된 땅(보라)을 밟으면 부식된다. 전신주로 영역을 넓히면 오염이 밀려난다'); SFX.play('seal');
 }
 const heartsLeft = () => Math.max(0, CONFIG.blight.hearts.length - (G.heartsDown || 0));
 function heartDown(e) {
@@ -1852,13 +2057,59 @@ function drawBombs() {
   for (const b of G.bombs) { const f = 1 - Math.max(0, b.t) / b.t0; ctx.fillStyle = `rgba(230,90,40,${.12 + .28 * f})`; ctx.beginPath(); ctx.ellipse(b.x, b.y, b.R * f, b.R * f * .6, 0, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(255,120,60,.85)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(b.x, b.y, b.R, b.R * .6, 0, 0, 7); ctx.stroke();
     if (b.t < .6) { const h = b.t / .6 * 110; ctx.fillStyle = '#3a2a26'; ctx.beginPath(); ctx.arc(b.x, b.y - h, 4.5, 0, 7); ctx.fill(); ctx.fillStyle = '#ffb060'; ctx.fillRect(b.x - 1.5, b.y - h - 1.5, 3, 3); if (!RM && Math.random() < .5) parts.push({ x: b.x, y: b.y - h - 4, vx: rnd(-8, 8), vy: -20, life: .3, col: '#ff8a3a' }); } }
 }
+// ---------- v41 지역 이름 카드: 구역에 처음 들어가면 크게(고리·이름·한 줄), 다시 들어가면 이름만 작게 ----------
+const REGIONS = {
+  surface: { name: '봉인된 골짜기', sub: '본거지가 있는 평원', ring: 0 },
+  cave: { name: '수정 동굴', sub: '둥지가 자라는 수정 굴', ring: 1 },
+  ruin: { name: '잊힌 사원', sub: '미로 같은 방들과 고대 수호 골렘', ring: 2 },
+  canyon: { name: '화석 협곡', sub: '마른 강과 메사, 잠든 화석 거룡', ring: 2, opt: true },
+  sea: { name: '숨은 바다', sub: '깊은 물 아래 매복꾼과 심해 군주', ring: 3 },
+  high: { name: '고산지대', sub: '영역 밖에선 얼어붙는다', ring: 4 },
+  volc: { name: '화산 균열', sub: '용암 강과 떨어지는 화산탄', ring: 4 },
+  blight: { name: '오염지', sub: '번지는 오염과 세 심장', ring: 4 },
+};
+const CARD_T = { big: 4.2, small: 2.2 };
+// 경계를 스치기만 해서 깜박이지 않게 0.7초 머문 뒤에 바뀐 것으로 친다
+function regionTick(dt) {
+  if (G.card) { G.card.t += dt; if (G.card.t > (G.card.big ? CARD_T.big : CARD_T.small)) G.card = null; }
+  if (LAYER.kind !== 'valley' || !P.alive) { G.zCand = null; return; }
+  const z = zoneAt(P.x / TS, P.y / TS); if (z === G.zNow) { G.zCand = null; return; }
+  if (G.zCand !== z) { G.zCand = z; G.zCandT = 0; } G.zCandT += dt; if (G.zCandT < .7) return;
+  G.zNow = z; G.zCand = null; const R = REGIONS[z]; if (!R) return;
+  G.zSeen = G.zSeen || {}; const first = !G.zSeen[z]; G.zSeen[z] = true; G.card = { z, t: 0, big: first }; if (first) logPush(`${R.name} — ${R.sub}`, '#f4ecd8');
+}
+function drawRegionCard(sw, sh) {
+  const C = G.card, R = C && REGIONS[C.z]; if (!R || ui.menu || G.over) return;
+  const dur = C.big ? CARD_T.big : CARD_T.small, a = Math.max(0, Math.min(1, C.t / .5, (dur - C.t) / .8)); if (!a) return;
+  ctx.save(); ctx.globalAlpha = a; ctx.textAlign = 'center'; const y = Math.round(sh * .27), fs = C.big ? 34 : 22;
+  ctx.font = fs + 'px ' + TITLE; const w = ctx.measureText(R.name).width;
+  ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillText(R.name, sw / 2 + 2, y + 2); ctx.fillStyle = '#fff4dc'; ctx.fillText(R.name, sw / 2, y);
+  const L = C.big ? 64 : 36; ctx.fillStyle = 'rgba(255,236,200,.75)'; ctx.fillRect(sw / 2 - w / 2 - L - 14, y - fs * .32, L, 1.5); ctx.fillRect(sw / 2 + w / 2 + 14, y - fs * .32, L, 1.5);
+  if (C.big) { ctx.font = '500 12px ' + FONT; ctx.fillStyle = 'rgba(255,236,200,.85)'; ctx.fillText(R.ring ? `${R.ring}고리${R.opt ? ' · 선택 지역' : ''}` : '본거지', sw / 2, y - 40);
+    ctx.font = '500 14px ' + FONT; ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillText(R.sub, sw / 2 + 1, y + 27); ctx.fillStyle = '#f3e2c0'; ctx.fillText(R.sub, sw / 2, y + 26); }
+  ctx.restore();
+}
+// ---------- v41 화석 협곡: 열기 · 솟는 뼈 · 밤 물길 ----------
+function openCanyon() {
+  const K = CONFIG.canyon; G.canyonOpen = true; G.mmDirty = true;
+  for (const g of gates) if (g.canyon && !g.dead) { g.open = true; setTile(g.x, g.y, T.CRACK); }
+  const [cx, cy] = K.core, b = makeEnemy('wyrm', (cx + .5) * TS, (cy - 4.5) * TS, true); if (b) { b.sleep = true; b.home = [b.x, b.y]; }
+  for (let k = 0, tries = 0; k < K.sleepers && tries < 4000; tries++) { const x = ri(K.x0 + 3, K.x1 - 3), y = ri(K.y0 + 3, K.y1 - 3), t = tile[idx(x, y)]; if ((t !== T.CANF && t !== T.WASH && !TILES[t].hi) || Math.hypot(x - cx, y - cy) < 12 || x < K.x0 + 14) continue; const e = makeEnemy(k % 3 === 2 ? 'scarab' : 'raptor', (x + .5) * TS, (y + .5) * TS); if (e) { e.sleep = true; k++; } }
+  say2('밤이면 마른 강바닥에 물이 차서 걸음이 느려진다. 단(높은 땅) 위 포탑은 사거리가 1칸 길다'); SFX.play('seal');
+}
+// 화석 거룡: 플레이어 쪽으로 땅에서 뼈가 줄지어 솟는다(반피부터 세 줄). 붉은 원이 예고
+function boneSpikes(e, t, half) {
+  const K = e.K, a0 = Math.atan2(P.y - e.y, P.x - e.x);
+  for (const da of half ? [-.38, 0, .38] : [0]) for (let k = 1; k <= 8; k++) { const x = e.x + Math.cos(a0 + da) * k * TS * 1.1, y = e.y + Math.sin(a0 + da) * k * TS * 1.1; if (solidT(tile[tileOf(x, y)])) break; addBomb(x, y, t + k * .06, .85 * TS, K.dmg - 1, K.sdmg * .5, '#f4ecd8'); }
+}
+const wetAt = i => TILES[tile[i]].water || (G.flood && tile[i] === T.WASH);
 // ---------- v28 고산지대 열기 · 지역 정화 · 유적 재생 ----------
 function openHigh() {
   const HI = CONFIG.high; G.highOpen = true; G.mmDirty = true;
   for (const g of gates) if (g.high && !g.dead) { g.open = true; setTile(g.x, g.y, T.CRACK); }
   const [cx, cy] = HI.core, b = makeEnemy('frostgiant', (cx + .5) * TS, (cy - 3.5) * TS, true); if (b) { b.sleep = true; b.home = [b.x, b.y]; }
   for (let k = 0, tries = 0; k < HI.sleepers && tries < 4000; tries++) { const x = ri(HI.x0 + 2, HI.x1 - 2), y = ri(HI.y0 + 2, HI.y1 - 2), i = idx(x, y); if (tile[i] !== T.SNOW || x < HI.x0 + 12 || Math.hypot(x - cx, y - cy) < 12) continue; const e = makeEnemy('wolf', (x + .5) * TS, (y + .5) * TS); if (e) { e.sleep = true; k++; } }
-  say('고산지대 — 추위가 뼈를 파고든다', true, '#dff4ff'); say2('영역(코어·전신주) 밖에 오래 있으면 얼어붙는다. 전신주를 이어 가거나 화로를 지어라(운철)'); SFX.play('seal');
+  say2('영역(코어·전신주) 밖에 오래 있으면 얼어붙는다. 전신주를 이어 가거나 화로를 지어라(운철)'); SFX.play('seal');
 }
 function checkPurify() {
   if (LAYER.kind !== 'valley' || !G.sealOpen) return; G.purified = G.purified || {};
@@ -1894,6 +2145,7 @@ function bossAI(e, dt, dP) {
       else if (b.kind === 'slam') { const R = 2.6 * TS; burst(e.x, e.y, '#c8b090', 36, 170); burst(e.x, e.y, K.col, 14, 100); G.shake = Math.max(G.shake, RM ? 0 : .3); sfxAt('boom', e.x, e.y); if (P.alive && Math.hypot(P.x - e.x, P.y - e.y) < R + P.r) hurtPlayer(Math.round((K.dmg - 1) * (e.dm || 1)), e); for (const s2 of structs) if (!s2.dead && !s2.hostile && Math.hypot((s2.x + .5) * TS - e.x, (s2.y + .5) * TS - e.y) < R + 6) damageStruct(s2, K.sdmg); bossOpen(e, 1.1, '빈틈!'); }
       else if (b.kind === 'breath') { const R = 6.5 * TS, ha = .55, dx = P.x - e.x, dy = P.y - e.y, d = Math.hypot(dx, dy), da = Math.acos(Math.max(-1, Math.min(1, (dx * b.dx + dy * b.dy) / (d || 1)))); for (let k = 0; k < 40 && !RM; k++) { const a = Math.atan2(b.dy, b.dx) + rnd(-ha, ha), r = rnd(10, R); parts.push({ x: e.x + Math.cos(a) * r, y: e.y - 10 + Math.sin(a) * r, vx: Math.cos(a) * 40, vy: Math.sin(a) * 40, life: .6, col: Math.random() < .5 ? '#e8f6ff' : '#9fd4ec' }); } sfxAt('beam', e.x, e.y); if (P.alive && d < R && da < ha) { hurtPlayer(Math.round((K.dmg - 1) * (e.dm || 1)), e); P.cold = Math.min(CONFIG.high.cold.max, (P.cold || 0) + 8); pop('얼어붙는다', P.x, P.y - 22, '#bfe4f4'); } for (const s2 of structs) { if (s2.dead || s2.hostile) continue; const sx = (s2.x + .5) * TS - e.x, sy = (s2.y + .5) * TS - e.y, sd = Math.hypot(sx, sy); if (sd < R && Math.acos(Math.max(-1, Math.min(1, (sx * b.dx + sy * b.dy) / (sd || 1)))) < ha) damageStruct(s2, K.sdmg * .6); } bossOpen(e, 1.1, '빈틈!'); }
       else if (b.kind === 'erupt') { burst(e.x, e.y - 30, '#ff8a3a', 24, 120); sfxAt('boom', e.x, e.y); bossOpen(e, 1, '빈틈!'); }
+      else if (b.kind === 'spikes') { burst(e.x, e.y - 20, '#f4ecd8', 20, 110); sfxAt('crumble', e.x, e.y); bossOpen(e, 1.2, '빈틈!'); }
       else if (b.kind === 'volley') { const n = half ? 14 : 10; for (let k = 0; k < n; k++) { const a = k / n * 6.283 + rnd(0, .3); projs.push({ x: e.x, y: e.y - 8, vx: Math.cos(a) * 140, vy: Math.sin(a) * 140, dmg: 2, life: 2.2, kind: 'foe', foe: true }); } sfxAt('beam', e.x, e.y); bossOpen(e, .9, '빈틈!'); }
     }
     return true;
@@ -1916,9 +2168,9 @@ function bossAI(e, dt, dP) {
   if (!P.alive || dP > C.aggro * TS) { b.stuck = 0; return false; }
   b.cd -= dt;
   if (b.cd <= 0 || b.stuck > .8) {
-    const kinds = dP < 3.2 * TS ? ['slam'] : e.k === 'lord' ? ['charge', 'volley'] : e.k === 'frostgiant' ? (dP < 6 * TS ? ['breath', 'breath', 'charge'] : ['charge']) : e.k === 'flamegiant' ? (dP < 8 * TS ? ['erupt', 'erupt', 'charge'] : ['erupt', 'charge']) : e.k === 'mother' ? (dP < 8 * TS ? ['volley', 'charge', 'volley'] : ['volley']) : ['charge']; b.kind = b.stuck > .8 ? 'charge' : kinds[ri(0, kinds.length - 1)];
+    const kinds = dP < 3.2 * TS ? ['slam'] : e.k === 'lord' ? ['charge', 'volley'] : e.k === 'frostgiant' ? (dP < 6 * TS ? ['breath', 'breath', 'charge'] : ['charge']) : e.k === 'flamegiant' ? (dP < 8 * TS ? ['erupt', 'erupt', 'charge'] : ['erupt', 'charge']) : e.k === 'mother' ? (dP < 8 * TS ? ['volley', 'charge', 'volley'] : ['volley']) : e.k === 'wyrm' ? (dP < 7 * TS ? ['spikes', 'spikes', 'charge'] : ['spikes', 'charge']) : ['charge']; b.kind = b.stuck > .8 ? 'charge' : kinds[ri(0, kinds.length - 1)];
     if (b.kind === 'charge' && dP > C.chargeLen * TS * 1.3 && b.stuck <= .8) b.kind = null;
-    if (b.kind) { b.st = 'tele'; b.t = (b.kind === 'charge' ? .9 : b.kind === 'slam' ? .8 : b.kind === 'breath' || b.kind === 'erupt' ? 1 : .7) * tf; if (b.kind === 'erupt') { addBomb(P.x, P.y, b.t, 1.4 * TS, K.dmg - 1, K.sdmg, '#ff7a3a'); for (let k = 0, n2 = half ? 5 : 3; k < n2; k++) { const a = rnd(0, 6.283), r = rnd(1.6, 3.6) * TS; addBomb(P.x + Math.cos(a) * r, P.y + Math.sin(a) * r, b.t + k * .08, 1.4 * TS, K.dmg - 1, K.sdmg, '#ff7a3a'); } } const l = dP || 1; b.dx = (P.x - e.x) / l; b.dy = (P.y - e.y) / l; b.stuck = 0; sfxAt('alarm', e.x, e.y); return true; }
+    if (b.kind) { b.st = 'tele'; b.t = (b.kind === 'charge' ? .9 : b.kind === 'slam' ? .8 : b.kind === 'breath' || b.kind === 'erupt' || b.kind === 'spikes' ? 1 : .7) * tf; if (b.kind === 'spikes') boneSpikes(e, b.t, half); if (b.kind === 'erupt') { addBomb(P.x, P.y, b.t, 1.4 * TS, K.dmg - 1, K.sdmg, '#ff7a3a'); for (let k = 0, n2 = half ? 5 : 3; k < n2; k++) { const a = rnd(0, 6.283), r = rnd(1.6, 3.6) * TS; addBomb(P.x + Math.cos(a) * r, P.y + Math.sin(a) * r, b.t + k * .08, 1.4 * TS, K.dmg - 1, K.sdmg, '#ff7a3a'); } } const l = dP || 1; b.dx = (P.x - e.x) / l; b.dy = (P.y - e.y) / l; b.stuck = 0; sfxAt('alarm', e.x, e.y); return true; }
   }
   const dx = P.x - e.x, dy = P.y - e.y, l = Math.hypot(dx, dy) || 1, sp = K.speed * (1 - e.slow) * (half ? 1.35 : 1);
   if (dP < e.r + P.r + 3) { e.vx *= .6; e.vy *= .6; if (e.atkT <= 0) { e.atkT = K.cd * 1.3; e.lunge = .15; hurtPlayer(Math.max(1, Math.round((K.dmg - 2) * (e.dm || 1))), e); } }
@@ -1983,7 +2235,7 @@ function updEnemy(e, dt) {
   if (K.swim) { if (K.boss) leviAI(e, dt, dP); else swimAI(e, dt, dP); return; }
   if (K.heart) { heartAI(e, dt, dP); return; }
   if (K.leash && !K.leashR) { leashAI(e, dt, dP); return; }
-  if (K.leashR && e.hp < e.max / 2 && !e.sleep) { e.sumT = (e.sumT ?? 2) - dt; if (e.sumT <= 0) { e.sumT = e.k === 'mother' ? 10 : 14; const mk = e.k === 'frostgiant' ? 'wolf' : e.k === 'flamegiant' ? 'salamander' : 'blightling'; for (let k = 0; k < (e.k === 'mother' ? 3 : 2); k++) makeEnemy(mk, e.x + (k - 1) * 24, e.y + 12, false, true); burst(e.x, e.y - 20, K.col, 20, 110); } }
+  if (K.leashR && e.hp < e.max / 2 && !e.sleep) { e.sumT = (e.sumT ?? 2) - dt; if (e.sumT <= 0) { e.sumT = e.k === 'mother' ? 10 : 14; const mk = e.k === 'frostgiant' ? 'wolf' : e.k === 'flamegiant' ? 'salamander' : e.k === 'wyrm' ? 'raptor' : 'blightling'; for (let k = 0; k < (e.k === 'mother' ? 3 : 2); k++) makeEnemy(mk, e.x + (k - 1) * 24, e.y + 12, false, true); burst(e.x, e.y - 20, K.col, 20, 110); } }
   if (K.boss && bossAI(e, dt, dP)) return;
   if ((K.jam || K.hook) && specialAI(e, dt, dP)) return;
   if (dP > CONFIG.chaseOut * TS) e.chase = false; else if (e.chase || dP < CONFIG.chaseIn * TS) e.chase = K.fly || losClear(e.x, e.y - 4, P.x, P.y - 4);
@@ -2005,7 +2257,7 @@ function updEnemy(e, dt) {
     if (e.atkT <= 0) { e.atkT = K.cd; e.lunge = .15; const dm = (e.dm || 1) * (hasMod('frenzy') && e.hp < e.max * .4 ? 1.5 : 1); if (atk.kind === 'player') hurtPlayer(Math.round(K.dmg * dm), e); else if (atk.kind === 'core') damageCore(atk.o, K.sdmg * dm); else { damageStruct(atk.o, K.sdmg * dm); const th = atk.o.D && sLv(atk.o).thorns; if (th) hurtEnemy(e, th, 'rune'); } }
   } else if (tx !== undefined) {
     if (e.kb > 0) e.kb -= dt;
-    else { const sp = K.speed * (1 - e.slow) * (!K.fly && TILES[tile[ti]].water ? .6 : 1) * (!K.fly && TILES[tile[ti]].drift ? .75 : 1) * (!K.fly && TILES[tile[ti]].blight ? 1.3 : 1) * (K.boss && e.hp < e.max / 2 ? 1.35 : 1) * (hasMod('frenzy') && e.hp < e.max * .4 ? 1.5 : 1), dx = tx - e.x, dy = ty - e.y, l = Math.hypot(dx, dy) || 1; e.vx = lerp(e.vx, dx / l * sp, Math.min(1, dt * 8)); e.vy = lerp(e.vy, dy / l * sp, Math.min(1, dt * 8)); }
+    else { const sp = K.speed * (1 - e.slow) * (!K.fly && wetAt(ti) ? .6 : 1) * (!K.fly && TILES[tile[ti]].drift ? .75 : 1) * (!K.fly && TILES[tile[ti]].blight ? 1.3 : 1) * (K.boss && e.hp < e.max / 2 ? 1.35 : 1) * (hasMod('frenzy') && e.hp < e.max * .4 ? 1.5 : 1), dx = tx - e.x, dy = ty - e.y, l = Math.hypot(dx, dy) || 1; e.vx = lerp(e.vx, dx / l * sp, Math.min(1, dt * 8)); e.vy = lerp(e.vy, dy / l * sp, Math.min(1, dt * 8)); }
   }
   if (Math.abs(e.vx) > 3) e.face = Math.sign(e.vx);
   moveEnt(e, dt, K.fly ? 'f' : 'g');
@@ -2026,6 +2278,7 @@ function hurtPlayer(n, src) {
   if (!P.alive || P.inv > 0 || P.dash > 0 || G.over) return;
   if (P.recallT > 0) { P.recallT = 0; say2('맞아서 귀환이 끊겼다'); }
   if (P.gear.armor >= 3) n = Math.max(1, n - 1);
+  if (P.bonemail && TILES[tile[tileOf(P.x, P.y)]].hi) n = Math.max(1, n - 1);
   if (P.mods.glassTaken) n = Math.ceil(n * (1 + P.mods.glassTaken));
   if (P.mods.thornSet) for (const e of enemies) if (!e.dead && Math.hypot(e.x - P.x, e.y - P.y) < 2 * TS) hurtEnemy(e, P.mods.thornSet, 'thorn', true);
   P.hp -= n; P.inv = CONFIG.player.invuln; P.lastHit = G.runT; burst(P.x, P.y - 6, '#ff8a7a', 8); SFX.play('hurt');
@@ -2114,7 +2367,7 @@ function updPlayer(p, dt) {
   if (p.sdash) { p.sdash.t -= dt; for (const e of enemies) if (!e.dead && !p.sdash.hit.includes(e) && Math.hypot(e.x - p.x, e.y - p.y) < e.r + 16) { p.sdash.hit.push(e); hurtEnemy(e, p.sdash.dmg, 'sword', true, GEAR.burn(p), 2); } if (!RM) parts.push({ x: p.x, y: p.y - 6, vx: 0, vy: 0, life: .2, col: '#e8e0d0' }); if (p.sdash.t <= 0) p.sdash = null; }
   const it = p.intent; let ix = it.mvx, iy = it.mvy; const il = Math.hypot(ix, iy) || 1; ix /= il; iy /= il;
   if (p.pullT > 0) p.pullT -= dt;
-  else if (p.dash <= 0) { const acc = 1400; p.vx += ix * acc * dt; p.vy += iy * acc * dt; const sp = Math.hypot(p.vx, p.vy); const ms = PC.speed * GEAR.bootSpd[p.gear.boots || 0] * (TILES[tile[tileOf(p.x, p.y)]].water ? .6 : 1) * (1 + (p.mods.spd || 0)) * (p.mods.gamble ? .7 : 1) * (hasMod('swift') ? 1.2 : 1) * (LAYER.ab && LAYER.ab.slowT > 0 ? .5 : 1) * (1 - .55 * clamp(((p.cold || 0) - CONFIG.high.cold.slowAt) / (CONFIG.high.cold.slowFull - CONFIG.high.cold.slowAt), 0, 1)) * (TILES[tile[tileOf(p.x, p.y)]].ice ? 1.15 : 1) * (TILES[tile[tileOf(p.x, p.y)]].drift ? .7 : 1) * (TILES[tile[tileOf(p.x, p.y)]].deep ? (p.gear.boots >= 3 ? 1 : .8) : 1); if (sp > ms) { p.vx *= ms / sp; p.vy *= ms / sp; } if (!ix) p.vx *= Math.exp(-14 * dt); if (!iy) p.vy *= Math.exp(-14 * dt); }
+  else if (p.dash <= 0) { const acc = 1400; p.vx += ix * acc * dt; p.vy += iy * acc * dt; const sp = Math.hypot(p.vx, p.vy); const ms = PC.speed * GEAR.bootSpd[p.gear.boots || 0] * (wetAt(tileOf(p.x, p.y)) ? .6 : 1) * (1 + (p.mods.spd || 0)) * (p.mods.gamble ? .7 : 1) * (hasMod('swift') ? 1.2 : 1) * (LAYER.ab && LAYER.ab.slowT > 0 ? .5 : 1) * (1 - .55 * clamp(((p.cold || 0) - CONFIG.high.cold.slowAt) / (CONFIG.high.cold.slowFull - CONFIG.high.cold.slowAt), 0, 1)) * (TILES[tile[tileOf(p.x, p.y)]].ice ? 1.15 : 1) * (TILES[tile[tileOf(p.x, p.y)]].drift ? .7 : 1) * (TILES[tile[tileOf(p.x, p.y)]].deep ? (p.gear.boots >= 3 ? 1 : .8) : 1); if (sp > ms) { p.vx *= ms / sp; p.vy *= ms / sp; } if (!ix) p.vx *= Math.exp(-14 * dt); if (!iy) p.vy *= Math.exp(-14 * dt); }
   moveEnt(p, dt, 'g' + (p.raft ? 'r' : '') + (p.grapple && (p.dash > 0 || p.hookT > 0) ? 'h' : '')); if (ix || iy) p.walk += dt * 10;
   if (p.grapple && overPit(p)) { if (p.dash <= 0) { p.dash = .02; p.hookT = (p.hookT || 0) + dt; if (p.hookT > .5 || Math.hypot(p.vx, p.vy) < 60) { if (p.gStart) { p.x = p.gStart[0]; p.y = p.gStart[1]; } p.vx = p.vy = 0; p.dash = 0; p.hookT = 0; } } else p.hookT = (p.hookT || 0) + dt; } else if (p.dash <= 0) p.hookT = 0;
   if (!p.grapple && overPit(p) && p.gStart) { p.x = p.gStart[0]; p.y = p.gStart[1]; }
@@ -2199,7 +2452,7 @@ function regrowTree() {
 // 두 점 사이에 단단한 지형(벽·바위)이 있는지. 건물은 막지 않는다
 function losClear(x0, y0, x1, y1) { const d = Math.hypot(x1 - x0, y1 - y0), n = Math.ceil(d / 6); for (let k = 1; k < n; k++) { const t2 = k / n; if (solidT(tile[tileOf(x0 + (x1 - x0) * t2, y0 + (y1 - y0) * t2)])) return false; } return true; }
 function turretFire(o, L, sx, sy, kind, mul = 1) {
-  const burn = !!(tech.atkS && o.D), rng = L.range + (tech.atk4 && o.D ? 1 : 0) + (tech.atkS && o.D ? 1 : 0) + (tech.eco4 && o.isCore ? 2 : 0), R = rng * TS; const dmg = Math.round((L.dmg + (tech.ess1 ? 1 : 0) + (tech.atk4 && o.D ? 2 : 0)) * mul);
+  const burn = !!(tech.atkS && o.D), rng = L.range + (tech.atk4 && o.D ? 1 : 0) + (tech.atkS && o.D ? 1 : 0) + (tech.eco4 && o.isCore ? 2 : 0) + (o.x !== undefined && inb(o.x, o.y) && TILES[tile[idx(o.x, o.y)]].hi ? (tech.defH ? 2 : 1) : 0), R = rng * TS; const dmg = Math.round((L.dmg + (tech.ess1 ? 1 : 0) + (tech.atk4 && o.D ? 2 : 0)) * mul);
   const noAir = kind === 'shell' || !!(o.D && o.D.noAir), cand = [];
   for (const e of enemies) { if (e.dead || e.sleep) continue; if (noAir && e.K.fly) continue; const d = Math.hypot(e.x - sx, e.y - sy); if (d > R) continue; if (kind === 'shell' && d < (L.min || 0) * TS) continue; cand.push([e, d]); }
   if (!cand.length) return false;
@@ -2225,7 +2478,7 @@ const altarCenter = () => [(CONFIG.altar.x + 1) * TS, (CONFIG.altar.y + 1) * TS]
 function nearAltar(p) { if (LAYER.kind !== 'valley' || !G.seal2Open) return false; const [ax, ay] = altarCenter(); return Math.hypot(ax - p.x, ay - p.y) <= 3 * TS; }
 function altarHint(p) {
   if (G.postGame) return `E · 심연 문 (석판 ${G.tablets.length}개${G.bestDepth ? ` · 최고 ${G.bestDepth}층` : ''})`;
-  const need = cores.filter(c => G.hard || !c.branch), on = need.filter(c => c.state === 'active' && c.connected).length;
+  const need = cores.filter(c => (G.hard || !c.branch) && !c.optional), on = need.filter(c => c.state === 'active' && c.connected).length;
   if (G.finale) return '제단이 타오르고 있다';
   if (on < need.length) return `제단은 ${G.hard ? '세 갈래 코어까지 ' : ''}모든 코어가 깨어 있어야 응답한다 (${on}/${need.length})`;
   const want = G.hard ? 2 : 1;
@@ -2262,6 +2515,7 @@ function updFinale(dt) {
 function bossDown(e) {
   if (e.k === 'flamegiant') { G.flameDown = true; res.obsid += 12; G.gotObsid = true; burst(e.x, e.y - 20, '#ff9a5a', 60, 200); G.flash = RM ? 0 : .3; say('화염 거신이 식어 무너졌다', true, '#ffb080'); say2('화산 코어가 풀려났다. 깨우면 전진기지가 된다 — 영역 안에는 화산탄이 떨어지지 않는다'); return; }
   if (e.k === 'mother') { G.motherDown = true; res.blightc += 12; G.gotBlightc = true; const [kx, ky] = CONFIG.blight.core; for (let y = ky - 12; y <= ky + 12; y++) for (let x = kx - 12; x <= kx + 12; x++) if (inb(x, y) && tile[idx(x, y)] === T.BLIGHT && Math.hypot(x - kx, y - ky) <= 12) setTile(x, y, T.MIRE); burst(e.x, e.y - 20, '#f0b0e0', 60, 200); G.flash = RM ? 0 : .3; say('오염 모체가 말라 죽었다', true, '#f0b0e0'); say2('오염지 코어가 풀려났다. 깨우면 전진기지가 된다 — 영역이 오염을 밀어낸다'); return; }
+  if (e.k === 'wyrm') { G.wyrmDown = true; res.fossil += 12; res.amber += 6; G.gotFossil = true; burst(e.x, e.y - 20, '#f4ecd8', 60, 200); G.flash = RM ? 0 : .3; say('화석 거룡이 다시 뼈 무더기가 됐다', true, '#f4ecd8'); say2('협곡 코어가 풀려났다. 깨우면 전진기지가 된다 — 단 위 포탑은 사거리가 1칸 길다'); return; }
   if (e.k === 'frostgiant') { G.giantDown = true; res.meteor += 12; burst(e.x, e.y - 20, '#dff4ff', 60, 200); G.flash = RM ? 0 : .3; say('서리 거인이 무너졌다', true, '#dff4ff'); say2('산정 코어가 풀려났다. 깨우면 전진기지가 된다 — 영역 안은 따뜻하다'); return; }
   if (e.k === 'leviathan') { G.leviDown = true; res.pearl += 12; burst(e.x, e.y - 20, '#bfefff', 60, 200); G.flash = RM ? 0 : .3; say('심해 군주가 가라앉았다', true, '#bfefff'); say2('바다 코어가 풀려났다. 깨우면 섬이 전진기지가 된다'); return; }
   if (e.k === 'colossus') { G.colossusDown = true; for (const i of tileFind(T.SEADOOR)) setTile(i % W, (i / W) | 0, T.RUINF); G.later.push({ t: G.runT + 5, m: '사원 맨 아래층 수문이 열렸다 — 아래는 숨은 바다. 뗏목(C · 도구)이 있어야 건넌다' }); res.sun += 10; res.rune += 10; gotRuinRes(); burst(e.x, e.y - 20, '#ffd890', 60, 200); G.flash = RM ? 0 : .3; say('고대 수호 골렘이 무너졌다', true, '#ffd890'); say2('고대 코어가 풀려났다. 가까이 가서 E로 깨우면 전진기지가 된다'); return; }
@@ -2308,7 +2562,7 @@ function step(dt) {
   if (valley && !isNight && G.night) { G.night = false; G.blood = false; G.warned = false; G.raidTarget = -1; G.raidF = null; SFX.play('day'); restoreRuins(); if (G.hard) blightTick(); checkPurify(); ruinRegrow(); G.lastSave = -99; if (!G.finale) { const cm = cpMilestone(); if (cm.sig !== G.cpSig) { G.cpSig = cm.sig; G.cpLabel = cm.label; G.cpWant = true; } } if (G.sealOpen && !G.finale && growNest()) say('날이 밝았다 · 동굴에 새 둥지가 자랐다', false, '#f0c0ff'); else say('날이 밝았다'); }
   G.dark = lerp(G.dark, valley ? (isNight ? 1 : zoneAt(P.x / TS, P.y / TS) === 'ruin' ? .66 : zoneAt(P.x / TS, P.y / TS) === 'sea' ? .22 : zoneAt(P.x / TS, P.y / TS) === 'volc' ? .5 : zoneAt(P.x / TS, P.y / TS) === 'blight' ? .45 : 0) : .8, Math.min(1, dt * .6));
   if (G.sealAnim) { const A = G.sealAnim; A.t += dt; const want = Math.min(A.list.length, Math.ceil(A.t / CONFIG.sealAnim * A.list.length)); while (A.k < want) { const i = A.list[A.k++]; setTile(i % W, (i / W) | 0, digFloor(i % W, (i / W) | 0)); burst((i % W + .5) * TS, ((i / W) | 0) * TS, '#f0dc8a', 8, 90); } if (A.k >= A.list.length) G.sealAnim = null; }
-  for (const f of floods) { if (!f.warned && G.clock >= f.t - CONFIG.floodWarn) { f.warned = true; SFX.play('horn'); say('범람이 온다', true, '#ffb0a0'); } if (!f.done && G.clock >= f.t) { f.done = true; spawnFlood(f.spec, f.high ? 'high' : f.sea ? 'sea' : f.volc ? 'volc' : f.blight ? 'blight' : f.ruin); } }
+  for (const f of floods) { if (!f.warned && G.clock >= f.t - CONFIG.floodWarn) { f.warned = true; SFX.play('horn'); say('범람이 온다', true, '#ffb0a0'); } if (!f.done && G.clock >= f.t) { f.done = true; spawnFlood(f.spec, f.high ? 'high' : f.sea ? 'sea' : f.volc ? 'volc' : f.blight ? 'blight' : f.canyon ? 'canyon' : f.ruin); } }
   floods = floods.filter(f => !f.done);
   spawnQ.sort((a, b) => a.t - b.t);
   let room = CONFIG.maxEnemies - enemies.filter(e => !e.dead).length;
@@ -2320,6 +2574,9 @@ function step(dt) {
   G.braziers = []; for (const s of structs) if (!s.dead && s.type === 'brazier') G.braziers.push({ x: (s.x + .5) * TS, y: (s.y + .5) * TS, r: sLv(s).warm * TS });
   if (res.meteor > 0 && !G.gotMeteor) { G.gotMeteor = true; say('운철을 얻었다 · 갈고리·서리 외투·화로를 만들 수 있다', false, '#bfd8f0'); }
   if (valley && !G.highOpen && P.alive && P.x >= CONFIG.high.x0 * TS && P.y <= CONFIG.high.y1 * TS) openHigh();
+  if (valley && !G.canyonOpen && P.alive && P.x >= (CONFIG.canyon.x0 + 2) * TS && zoneAt(P.x / TS, P.y / TS) === 'canyon') openCanyon();
+  G.flood = valley && isNight && !!G.canyonOpen; regionTick(dt);
+  if (res.fossil + res.amber > 0 && !G.gotFossil) { G.gotFossil = true; say('화석·호박을 얻었다 · 화석 견갑·호박 조준경·고지대 축성 연구에 쓴다', false, '#f4ecd8'); }
   if (valley && !G.seaOpen && P.alive && P.y >= CONFIG.sea.y0 * TS) openSea();
   if (valley && P.alive && P.y >= CONFIG.volc.y0 * TS) { if (P.x <= (CONFIG.volc.x1 + 1) * TS) { if (!G.volcOpen) openVolc(); } else if (!G.blightOpen) openBlight(); }
   if (res.obsid > 0 && !G.gotObsid) { G.gotObsid = true; say('흑요석을 얻었다 · 흑요석 갑옷·봉인의 핵에 쓴다', false, '#c8b0f0'); }
@@ -2599,7 +2856,7 @@ function lvStats(L, D) {
 }
 function statRowsOf(a, b) { const rows = []; for (const [k, lab, unit, low] of STAT_DEF) { if (a[k] == null && (!b || b[k] == null)) continue; rows.push([lab, a[k] ?? 0, b ? (b[k] ?? 0) : undefined, low, unit]); } return rows; }
 const diffBrief = (a, b) => STAT_DEF.filter(([k]) => a[k] != null || b[k] != null).filter(([k]) => a[k] !== b[k]).map(([k, lab, u]) => `${lab} ${fmtN(a[k] ?? 0)}→${fmtN(b[k] ?? 0)}${u || ''}`).join(', ');
-const RES_USE = { wood: '석궁 포탑·함정·연구·무기 +1', stone: '벽·투석 포탑·연구·업그레이드 대부분', copper: '전신주·포탑·연구·장비 (아껴 쓸 자원)', crystal: '3단계 업그레이드·수정 포탑·수정 장비·무기 +2~+4', essence: '정수 연구·장신구 재련·무기 +3', iron: '장비: 흑철 갑옷·흑철 벼리기·무기 +5 · 연구: 5단계 · 업그레이드: 포탑 5단계(심연 각인) · 봉인의 핵', sun: '장비: 태양 벼리기·태양 장화·룬 곡괭이·무기 +4 · 연구: 태양 렌즈·룬 굴착 · 업그레이드: 포탑 4단계·채굴기 4단계·코어 4단계·고대 포탑 2단계 · 고대 코어 깨우기', rune: '장비: 룬 갑옷·룬 곡괭이·무기 +4 · 연구: 룬 각인·룬 굴착 · 업그레이드: 벽·함정·전신주·채굴기 4단계·토템 3단계·코어 4단계 · 고대 포탑 되찾기·고대 코어 깨우기', shard: '장신구 심연 강화(캐릭터 탭) · 포탑 5단계(심연 각인) · 무기 +5 · 석판 올리기(제단)' , meteor: '장비: 운철 갈고리·서리 외투 · 건물: 화로 · 업그레이드: 화로 2단계·운철 전신주(5단계)' , pearl: '장비: 진주 물갈퀴 장화·서리 등잔·정화 망토 · 공물: 수호자의 공물 · 연구: 흑철 포신 · 업그레이드: 룬 결계 등불', obsid: '장비: 흑요석 갑옷 · 공물: 봉인의 핵 · 화산 코어 깨우기', blightc: '장비: 정화 망토 · 공물: 봉인의 핵 · 오염지 코어 깨우기' };
+const RES_USE = { fossil: '장비: 화석 견갑·호박 조준경 · 연구: 고지대 축성 · 업그레이드: 화석 골조 벽(벽 5단계) · 협곡 코어 깨우기', amber: '장비: 화석 견갑·호박 조준경 · 연구: 고지대 축성 · 업그레이드: 화석 골조 벽(벽 5단계) · 협곡 코어 깨우기', wood: '석궁 포탑·함정·연구·무기 +1', stone: '벽·투석 포탑·연구·업그레이드 대부분', copper: '전신주·포탑·연구·장비 (아껴 쓸 자원)', crystal: '3단계 업그레이드·수정 포탑·수정 장비·무기 +2~+4', essence: '정수 연구·장신구 재련·무기 +3', iron: '장비: 흑철 갑옷·흑철 벼리기·무기 +5 · 연구: 5단계 · 업그레이드: 포탑 5단계(심연 각인) · 봉인의 핵', sun: '장비: 태양 벼리기·태양 장화·룬 곡괭이·무기 +4 · 연구: 태양 렌즈·룬 굴착 · 업그레이드: 포탑 4단계·채굴기 4단계·코어 4단계·고대 포탑 2단계 · 고대 코어 깨우기', rune: '장비: 룬 갑옷·룬 곡괭이·무기 +4 · 연구: 룬 각인·룬 굴착 · 업그레이드: 벽·함정·전신주·채굴기 4단계·토템 3단계·코어 4단계 · 고대 포탑 되찾기·고대 코어 깨우기', shard: '장신구 심연 강화(캐릭터 탭) · 포탑 5단계(심연 각인) · 무기 +5 · 석판 올리기(제단)' , meteor: '장비: 운철 갈고리·서리 외투 · 건물: 화로 · 업그레이드: 화로 2단계·운철 전신주(5단계)' , pearl: '장비: 진주 물갈퀴 장화·서리 등잔·정화 망토 · 공물: 수호자의 공물 · 연구: 흑철 포신 · 업그레이드: 룬 결계 등불', obsid: '장비: 흑요석 갑옷 · 공물: 봉인의 핵 · 화산 코어 깨우기', blightc: '장비: 정화 망토 · 공물: 봉인의 핵 · 오염지 코어 깨우기' };
 const ROLE = {
   wall: '길을 막아 적을 돌아가게 만든다. 굴멧돼지는 부수고 지나간다', trap: '밟고 지나가는 지상 적에게 피해. 길을 막지 않고 적이 공격하지 않는다',
   totem: '주변 건물과 코어를 1초마다 고친다', lamp: '범위 안 적을 느리게 하고, 마비 정령이 포탑을 멈추지 못하게 하며 태운다. 보스는 절반만 느려진다', xbow: '싸고 빠른 화살. 비행 적과 방어 없는 적을 먼저 노린다. 방어가 있으면 피해가 그만큼 깎인다', mortar: '지상 적이 가장 많이 뭉친 곳에 포탄. 벽 너머로도 쏜다. 비행 적과 2칸 안의 적은 못 맞춘다',
@@ -2672,7 +2929,7 @@ function charStats(eq) {
 
 // ---------- 제작 ----------
 const W_CHAIN = id => [...(id === 'sword' ? [] : [id]), 1, 2, 3, 4, 5].map(t => typeof t === 'number' ? `w_${id}_${t}` : t);
-const CRAFT_CATS = [['무기', [W_CHAIN('sword'), W_CHAIN('xbow'), W_CHAIN('staff'), ['blade1', 'blade2', 'bladeS', 'blade3']]], ['방어구', [['armor1', 'armor2', 'armor3', 'armorR', 'armor4', 'armor5'], ['boots', 'boots2', 'boots3'], ['coat', 'cloak']]], ['도구', [['pick2', 'pick3', 'pick4'], ['raft'], ['torch'], ['grapple'], ['lantern']]], ['열쇠·공물', [['key', 'key2'], ['offer1', 'offer2']]]];
+const CRAFT_CATS = [['무기', [W_CHAIN('sword'), W_CHAIN('xbow'), W_CHAIN('staff'), ['blade1', 'blade2', 'bladeS', 'blade3']]], ['방어구', [['armor1', 'armor2', 'armor3', 'armorR', 'armor4', 'armor5'], ['boots', 'boots2', 'boots3'], ['coat', 'cloak'], ['bonemail']]], ['도구', [['pick2', 'pick3', 'pick4'], ['raft'], ['torch'], ['grapple'], ['lantern'], ['amberscope']]], ['열쇠·공물', [['key', 'key2'], ['offer1', 'offer2']]]];
 // 사슬(같은 장비의 단계들)에서 보여줄 것: 아직 없는 첫 단계, 다 가졌으면 마지막
 const chainNext = ch => { const rs = ch.map(id => RECIPES.find(r => r.id === id)); return rs.find(r => !r.has(P)) || rs[rs.length - 1]; };
 function recipeLock(R) {
@@ -3057,9 +3314,16 @@ function drawWall(x, y) {
   const t = tile[idx(x, y)], D = TILES[t], px = x * TS, py = y * TS - WH, h = hash(x, y, 5), z = zoneAt(x, y), bey = z === 'cave', rui = z === 'ruin';
   const hig = z === 'high', top = bey && D.topB ? D.topB : rui && D.topR ? D.topR : hig && D.topH ? D.topH : D.top, face = bey && D.faceB ? D.faceB : rui && D.faceR ? D.faceR : hig && D.faceH ? D.faceH : D.face;
   const below = isBlockAt(x, y + 1), above = isBlockAt(x, y - 1), left = isBlockAt(x - 1, y), right = isBlockAt(x + 1, y);
-  if (D.cliff) { const lip = !isBlockAt(x, y - 1); ctx.fillStyle = shade('#6fa44a', .92 + h * .1); ctx.fillRect(px, py, TS, TS); if (lip) { ctx.fillStyle = 'rgba(40,80,20,.35)'; ctx.fillRect(px, py, TS, 1); }
-    if (!below) { const fy = py + TS - 3, FH = WH + 9; ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(px - 1, fy + FH, TS + 2, 4); ctx.fillStyle = shade(D.face, .95 + h * .1); ctx.fillRect(px, fy, TS, FH); ctx.fillStyle = shade(D.face, .78); ctx.fillRect(px, fy + FH - 5, TS, 5); ctx.fillStyle = 'rgba(60,36,14,.35)'; ctx.fillRect(px, fy + 5, TS, 1); ctx.fillRect(px, fy + 11, TS, 1); ctx.fillRect(px + 3 + (x % 3) * 4, fy + 1, 1, 4); ctx.fillRect(px + 8 - (x % 2) * 5, fy + 12, 1, 4); ctx.fillStyle = 'rgba(255,230,190,.12)'; ctx.fillRect(px, fy + 6, TS, 1);
-      ctx.fillStyle = '#5f9a3c'; for (let k = 0; k < 4; k++) ctx.fillRect(px + k * 4 + (hash(x, k, 6) * 2 | 0), fy - 1, 3, 2 + (hash(x, y + k, 7) * 3 | 0)); ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(px, fy + FH - 1, TS, 1); if (!left) ctx.fillRect(px, fy, 1, FH); if (!right) ctx.fillRect(px + TS - 1, fy, 1, FH); }
+  // v41 절벽: 맞닿은 단의 층 높이(cliffLv)로 윗면 색, 아래 칸이 더 낮을 때만 앞면(조각을 돌려도 맞게 그려진다)
+  // 윗면은 단 안쪽과 같은 높이로 그리고(벽처럼 솟지 않는다), 낮은 쪽 가장자리에 턱 선, 남쪽이 낮으면 앞면이 아래 칸으로 늘어진다
+  if (D.cliff) { const lv = cliffLv(x, y), can = z === 'canyon', grassy = z === 'surface', py = y * TS; ctx.fillStyle = shade(ledgeCol(z, lv), .9 + h * .08); ctx.fillRect(px, py, TS, TS);
+    ctx.fillStyle = can ? 'rgba(110,60,30,.18)' : 'rgba(40,70,20,.18)'; if (h < .5) ctx.fillRect(px + 3 + h * 12, py + 5, 3, 2); if (h > .7) ctx.fillRect(px + 9, py + 10, 2, 2);
+    const low = (dx, dy) => { if (!inb(x + dx, y + dy)) return false; const t2 = tile[idx(x + dx, y + dy)]; return lvAt(x + dx, y + dy) < lv && (!TILES[t2].block || t2 === T.CLIFF); };
+    ctx.fillStyle = 'rgba(40,24,10,.55)'; if (low(0, -1)) ctx.fillRect(px, py, TS, 2); if (low(-1, 0)) ctx.fillRect(px, py, 2, TS); if (low(1, 0)) ctx.fillRect(px + TS - 2, py, 2, TS);
+    ctx.fillStyle = 'rgba(255,245,220,.3)'; if (low(0, -1)) ctx.fillRect(px, py + 2, TS, 1); if (low(-1, 0)) ctx.fillRect(px + 2, py, 1, TS); if (low(1, 0)) ctx.fillRect(px + TS - 3, py, 1, TS);
+    const bt = inb(x, y + 1) ? tile[idx(x, y + 1)] : T.BEDROCK, face = can ? '#b0683e' : D.face, showF = (!below && lvAt(x, y + 1) < lv) || (bt === T.CLIFF && cliffLv(x, y + 1) < lv);
+    if (showF) { const fy = py + TS, FH = WH + 2; ctx.fillStyle = 'rgba(0,0,0,.22)'; ctx.fillRect(px - 1, fy + FH, TS + 2, 4); ctx.fillStyle = shade(face, .95 + h * .1); ctx.fillRect(px, fy, TS, FH); ctx.fillStyle = shade(face, .78); ctx.fillRect(px, fy + FH - 5, TS, 5); ctx.fillStyle = can ? 'rgba(120,50,20,.35)' : 'rgba(60,36,14,.35)'; ctx.fillRect(px, fy + 5, TS, 1); ctx.fillRect(px, fy + 11, TS, 1); if (can) { ctx.fillStyle = 'rgba(255,220,170,.18)'; ctx.fillRect(px, fy + 8, TS, 2); ctx.fillStyle = 'rgba(120,50,20,.35)'; } ctx.fillRect(px + 3 + (x % 3) * 4, fy + 1, 1, 4); ctx.fillRect(px + 8 - (x % 2) * 5, fy + 12, 1, 4); ctx.fillStyle = 'rgba(255,230,190,.12)'; ctx.fillRect(px, fy + 6, TS, 1);
+      if (grassy) { ctx.fillStyle = '#5f9a3c'; for (let k = 0; k < 4; k++) ctx.fillRect(px + k * 4 + (hash(x, k, 6) * 2 | 0), fy - 1, 3, 2 + (hash(x, y + k, 7) * 3 | 0)); } ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(px, fy + FH - 1, TS, 1); if (!left) ctx.fillRect(px, fy, 1, FH); if (!right) ctx.fillRect(px + TS - 1, fy, 1, FH); }
     if (!left) { ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(px, py, 1, TS); } if (!right) { ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(px + TS - 1, py, 1, TS); } return; }
   ctx.fillStyle = shade(top, .93 + h * .14); ctx.fillRect(px, py, TS, TS);
   if (hig && t !== T.ICEW && t !== T.BEDROCK) { ctx.fillStyle = '#eef3f7'; if (above) { if (h > .45) ctx.fillRect(px + 2 + h * 8, py + 3 + h * 6, 4, 2); if (h < .3) ctx.fillRect(px + 9, py + 9, 3, 2); } else ctx.fillRect(px, py, TS, 6); if (!above) { ctx.fillRect(px + 2 + h * 6, py + 6, 4, 2); ctx.fillRect(px + 9 - h * 4, py + 6, 3, 1); } }
@@ -3090,6 +3354,11 @@ function drawWall(x, y) {
   if (t === T.ICES) { const gl = .5 + .3 * Math.sin(G.clock * 2 + y); ctx.strokeStyle = `rgba(255,216,106,${gl})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(px + 8, py + 8, 4, 0, 7); ctx.moveTo(px + 8, py + 2); ctx.lineTo(px + 8, py + 14); ctx.stroke(); }
   if (t === T.ICEW) { ctx.fillStyle = 'rgba(255,255,255,.45)'; ctx.fillRect(px + 3 + h * 6, py + 3, 1, 8); ctx.fillRect(px + 5 + h * 6, py + 2, 1, 5); if (!below) { ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fillRect(px + 2, py + TS + 2, 1, 6); ctx.fillRect(px + 10, py + TS + 1, 1, 7); } }
   if (t === T.METEOR) { for (let k = 0; k < 3; k++) { const a = hash(x, y, 130 + k), b = hash(x, y, 140 + k), gl = .6 + .4 * Math.sin(G.clock * 3 + k + x); ctx.fillStyle = '#4a5a74'; ctx.fillRect(px + 2 + a * 10, py + 2 + b * 10, 4, 3); ctx.fillStyle = `rgba(200,230,255,${gl})`; ctx.fillRect(px + 3 + a * 10, py + 2 + b * 10, 1, 1); } }
+  if (t === T.SANDST || t === T.AMBER) { ctx.fillStyle = 'rgba(120,60,24,.28)'; ctx.fillRect(px, py + 4 + (y % 3), TS, 1); ctx.fillRect(px, py + 10 + (y % 2), TS, 1); ctx.fillStyle = 'rgba(255,230,190,.15)'; ctx.fillRect(px, py + 7, TS, 1); if (!below) { ctx.fillStyle = 'rgba(255,210,160,.18)'; ctx.fillRect(px, py + TS + 4, TS, 2); } }
+  if (t === T.AMBER) { const gl = .7 + .3 * Math.sin(G.clock * 2 + x * 1.3 + y); for (let k = 0; k < 3; k++) { const a = hash(x, y, 540 + k), b = hash(x, y, 550 + k); ctx.fillStyle = `rgba(255,${150 + k * 25},40,${gl})`; ctx.beginPath(); ctx.ellipse(px + 3 + a * 10, py + 3 + b * 10, 2.4, 1.8, 0, 0, 7); ctx.fill(); } if (!below) { ctx.fillStyle = '#ffa830'; ctx.fillRect(px + 5 + h * 5, py + TS + 3, 2, 3); } }
+  if (t === T.BONE) { ctx.strokeStyle = 'rgba(120,100,70,.55)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px + 3, py + 4); ctx.quadraticCurveTo(px + 8, py + 2 + h * 4, px + 13, py + 5); ctx.moveTo(px + 4, py + 10); ctx.lineTo(px + 12, py + 11); ctx.stroke(); ctx.fillStyle = '#fff8e8'; ctx.beginPath(); ctx.arc(px + 3, py + 4, 1.6, 0, 7); ctx.arc(px + 13, py + 5, 1.6, 0, 7); ctx.fill(); }
+  if (t === T.SEDW) { ctx.fillStyle = 'rgba(40,26,14,.35)'; for (let k = 0; k < 4; k++) ctx.fillRect(px, py + 2 + k * 4, TS, 1); ctx.fillStyle = 'rgba(232,220,192,.55)'; if (h > .5) ctx.fillRect(px + 4 + h * 6, py + 6, 3, 1); if (!below) { ctx.fillStyle = 'rgba(40,26,14,.35)'; ctx.fillRect(px, py + TS + 3, TS, 1); ctx.fillRect(px, py + TS + 7, TS, 1); } }
+  if (t === T.ALTS) { ctx.fillStyle = '#8a7a5a'; ctx.fillRect(px + 2, py + 3, TS - 4, TS - 5); ctx.fillStyle = '#e8dcc0'; ctx.fillRect(px + 3, py + 4, TS - 6, 3); const gl = .5 + .4 * Math.sin(G.clock * 2 + x); ctx.fillStyle = `rgba(255,224,150,${gl})`; ctx.fillRect(px + 7, py + 1, 2, 3); }
   if (t === T.STATUE) { ctx.fillStyle = 'rgba(70,56,30,.5)'; ctx.fillRect(px + 3, py + 11, 10, 3); ctx.fillStyle = shade('#cabf9f', .95); ctx.fillRect(px + 5, py + 1, 6, 10); ctx.fillRect(px + 6, py - 3, 4, 4); ctx.fillStyle = 'rgba(70,56,30,.35)'; ctx.fillRect(px + 5, py + 6, 6, 1); ctx.fillStyle = 'rgba(110,150,70,.55)'; if (h > .4) ctx.fillRect(px + 4, py + 7, 2, 4); }
   if (rui && t === T.RWALL && !below && hash(x, y, 97) < .07) { const fl2 = .7 + .3 * Math.sin(G.clock * 9 + x * 3); ctx.fillStyle = '#4a3418'; ctx.fillRect(px + 7, py + TS + 3, 2, 5); ctx.fillStyle = `rgba(255,${150 + 40 * fl2},60,${fl2})`; ctx.beginPath(); ctx.ellipse(px + 8, py + TS + 1, 2.2, 3.4 * fl2, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,240,180,.8)'; ctx.fillRect(px + 7.5, py + TS, 1, 2); }
   if (rui && t === T.RWALL && h > .55 && h < .68) { ctx.fillStyle = 'rgba(80,120,50,.6)'; ctx.fillRect(px + 2 + h * 8, py + 2, 1, below ? 12 : 18); ctx.fillRect(px + 3 + h * 8, py + 8, 2, 1); }
@@ -3183,6 +3452,13 @@ function drawEnemy(e) {
   if (e.markT > G.runT && !e.dead) { ctx.strokeStyle = 'rgba(127,214,255,.9)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(0, -e.r * 2 - 4, 3.5, 0, 7); ctx.stroke(); }
   if (e.k === 'rat') { ctx.strokeStyle = '#4a2a18'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(-4 * f, -2); ctx.quadraticCurveTo(-8 * f, -4 + Math.sin(e.ph * 10) * 2, -11 * f, -1); ctx.stroke(); ctx.fillStyle = fl ? '#fff' : K.col; ctx.beginPath(); ctx.ellipse(0, -3 - bob, 5.5, 3.8, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(4 * f, -5 - bob, 2.6, 0, 7); ctx.fill(); ctx.fillStyle = '#d88a8a'; ctx.fillRect(3 * f - 1, -8.5 - bob, 2, 2); ctx.fillStyle = '#ff3a2a'; ctx.fillRect(5 * f - .5, -6 - bob, 1.3, 1.3); }
   if (e.k === 'brute') { ctx.fillStyle = fl ? '#fff' : K.col; ctx.beginPath(); ctx.ellipse(0, -7 - bob, 9, 6.5, 0, 0, 7); ctx.fill(); ctx.fillStyle = shade(K.col, .7); ctx.fillRect(-6, -2, 3, 3); ctx.fillRect(3, -2, 3, 3); ctx.fillStyle = fl ? '#fff' : shade(K.col, 1.2); ctx.beginPath(); ctx.arc(7 * f, -8 - bob, 4.5, 0, 7); ctx.fill(); ctx.fillStyle = '#efe6d0'; ctx.beginPath(); ctx.moveTo(9 * f, -7 - bob); ctx.lineTo(13 * f, -11 - bob); ctx.lineTo(10 * f, -6 - bob); ctx.fill(); ctx.fillStyle = '#3a2418'; for (let k = -2; k <= 2; k++) ctx.fillRect(k * 3 - 1, -14 - bob, 2, 3); ctx.fillStyle = '#ff3a2a'; ctx.fillRect(8 * f - .5, -10 - bob, 1.5, 1.5); }
+  if (e.k === 'scarab') { ctx.strokeStyle = '#4a2a10'; ctx.lineWidth = 1; for (let k = -1; k <= 1; k++) { const w = Math.sin(e.ph * 10 + k) * 1.5; ctx.beginPath(); ctx.moveTo(k * 3, -3); ctx.lineTo(k * 3 + w - 2, 1); ctx.moveTo(k * 3, -3); ctx.lineTo(k * 3 - w + 2, 1); ctx.stroke(); } ctx.fillStyle = fl ? '#fff' : e.sleep ? shade(K.col, .7) : K.col; ctx.beginPath(); ctx.ellipse(0, -5 - bob * .5, 7, 5.5, 0, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(255,220,140,.7)'; ctx.beginPath(); ctx.ellipse(-2, -7 - bob * .5, 3, 2, -.4, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(80,40,10,.6)'; ctx.beginPath(); ctx.moveTo(0, -10 - bob * .5); ctx.lineTo(0, 0); ctx.stroke(); ctx.fillStyle = '#3a2210'; ctx.beginPath(); ctx.arc(6 * f, -5, 2.4, 0, 7); ctx.fill(); }
+  if (e.k === 'raptor') { const run = Math.sin(e.ph * 16) * 1.5; ctx.strokeStyle = fl ? '#fff' : K.col; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-2 * f, -5); ctx.lineTo(-11 * f, -8 + run * .5); ctx.stroke(); ctx.fillStyle = fl ? '#fff' : e.sleep ? shade(K.col, .7) : K.col; ctx.beginPath(); ctx.ellipse(0, -7, 5.5, 3.4, -.2 * f, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(6 * f, -11, 3.6, 2.4, .3 * f, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(90,70,40,.8)'; ctx.lineWidth = 1; for (let k = -2; k <= 1; k++) { ctx.beginPath(); ctx.moveTo(k * 2, -9); ctx.lineTo(k * 2, -5); ctx.stroke(); } ctx.strokeStyle = fl ? '#fff' : shade(K.col, .8); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-1, -4); ctx.lineTo(-2 + run, 1); ctx.moveTo(2, -4); ctx.lineTo(1 - run, 1); ctx.stroke(); ctx.fillStyle = e.sleep ? '#5a4a3a' : '#ff6a3a'; ctx.fillRect(7 * f - .5, -12, 1.5, 1.5); }
+  if (e.k === 'wyrm') { const en = e.hp < e.max / 2, sw = Math.sin(e.ph * 3); ctx.scale(1.5, 1.5);
+    for (let k = 5; k >= 0; k--) { const bx = -k * 5 * f, by = -8 + Math.sin(e.ph * 3 - k * .8) * 2; ctx.fillStyle = fl ? '#fff' : e.sleep ? '#b8ac90' : K.col; ctx.beginPath(); ctx.arc(bx, by, 4.2 - k * .4, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(110,90,60,.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(bx, by - 5 + k * .3); ctx.lineTo(bx, by + 5 - k * .3); ctx.stroke(); if (k % 2 === 0 && k) { ctx.strokeStyle = fl ? '#fff' : '#d8ccb0'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(bx, by + 3); ctx.lineTo(bx - 2 * f, by + 9 + sw); ctx.stroke(); } }
+    ctx.fillStyle = fl ? '#fff' : e.sleep ? '#c8bc9e' : '#f4ecd8'; ctx.beginPath(); ctx.moveTo(3 * f, -14); ctx.lineTo(13 * f, -11); ctx.lineTo(14 * f, -6); ctx.lineTo(4 * f, -4); ctx.closePath(); ctx.fill(); ctx.fillStyle = 'rgba(60,40,20,.8)'; ctx.fillRect(8 * f - 1, -11, 2.5, 2); ctx.strokeStyle = '#6a5a40'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(6 * f, -7); ctx.lineTo(13 * f, -7); ctx.stroke();
+    ctx.fillStyle = e.sleep ? 'rgba(80,60,40,.8)' : en ? '#ff6a3a' : '#ffb840'; ctx.fillRect(8 * f - .5, -10.5, 1.5, 1.5);
+    if (e.sleep) { ctx.fillStyle = 'rgba(255,240,200,.8)'; ctx.font = '600 7px ' + FONT; ctx.fillText('z', 10, -20 - Math.sin(G.clock * 2) * 2); } }
   if (e.k === 'beetle') { ctx.strokeStyle = '#1e3a4a'; ctx.lineWidth = 1; for (let k = -1; k <= 1; k++) { const w = Math.sin(e.ph * 12 + k) * 1.5; ctx.beginPath(); ctx.moveTo(k * 3, -3); ctx.lineTo(k * 3 + w - 2, 1); ctx.moveTo(k * 3, -3); ctx.lineTo(k * 3 - w + 2, 1); ctx.stroke(); } ctx.fillStyle = fl ? '#fff' : e.sleep ? '#4a7a8a' : K.col; ctx.beginPath(); ctx.ellipse(0, -6, 7.5, 5.5, 0, 0, 7); ctx.fill(); ctx.strokeStyle = '#1e3a4a'; ctx.stroke(); ctx.fillStyle = 'rgba(255,255,255,.45)'; ctx.beginPath(); ctx.moveTo(-3, -9); ctx.lineTo(0, -12); ctx.lineTo(2, -8); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#2a4a5a'; ctx.beginPath(); ctx.arc(7 * f, -5, 2.5, 0, 7); ctx.fill(); if (e.sleep) { ctx.fillStyle = 'rgba(220,240,255,.8)'; ctx.font = '600 7px ' + FONT; ctx.fillText('z', 6, -14 - Math.sin(G.clock * 2) * 2); } }
   if (e.k === 'guardian' || e.k === 'lord') {
     const en = e.hp < e.max / 2, st = Math.sin(e.ph * 5) * 1.5, L2 = e.k === 'lord'; if (L2) ctx.scale(1.25, 1.25);
@@ -3261,6 +3537,7 @@ function draw() {
     if (!on(-1, 0)) for (let k = 0; k < TS; k += 4) ctx.fillRect(x * TS, y * TS + k, 1, 2);
     if (!on(1, 0)) for (let k = 0; k < TS; k += 4) ctx.fillRect(x * TS + TS - 1, y * TS + k, 1, 2);
   }
+  if (G.flood) for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const i = idx(x, y); if (tile[i] !== T.WASH || !seen[i]) continue; const wv = Math.sin(G.clock * 2.4 + x * .9 + y * .5); ctx.fillStyle = `rgba(70,130,180,${.5 + wv * .06})`; ctx.fillRect(x * TS, y * TS, TS, TS); ctx.fillStyle = 'rgba(200,235,255,.3)'; ctx.fillRect(x * TS + 2 + (wv + 1) * 4, y * TS + 6, 5, 1); }
   for (const g of gates) { if (g.type !== 'crack') continue; const gx = (g.x + .5) * TS, gy = (g.y + .5) * TS; if (!g.open) { ctx.strokeStyle = 'rgba(170,90,220,.45)'; ctx.setLineDash([2, 2]); ctx.lineWidth = 1; ctx.beginPath(); ctx.ellipse(gx, gy, 9, 6, 0, 0, 7); ctx.stroke(); ctx.setLineDash([]); continue; } const a = .3 + .25 * Math.sin(G.clock * 3 + g.x); ctx.fillStyle = `rgba(170,90,220,${a})`; ctx.beginPath(); ctx.ellipse(gx, gy, 12, 8, 0, 0, 7); ctx.fill(); }
   for (const r of G.ruins) { if (r.x < x0 || r.x > x1 || r.y < y0 || r.y > y1) continue; const px = r.x * TS, py = r.y * TS; ctx.fillStyle = 'rgba(60,50,40,.55)'; ctx.fillRect(px + 2, py + 6, 5, 4); ctx.fillRect(px + 8, py + 9, 6, 4); ctx.fillRect(px + 5, py + 3, 4, 3); ctx.strokeStyle = 'rgba(255,224,138,.5)'; ctx.setLineDash([2, 2]); ctx.lineWidth = 1; ctx.strokeRect(px + .5, py + .5, TS - 1, TS - 1); ctx.setLineDash([]); }
   drawBossTele(); drawBombs();
@@ -3365,7 +3642,7 @@ function draw() {
 // 목표 지점(있으면). 멀리 있으면 플레이어 둘레에 방향 화살표를 그린다
 // v30 목표: 단계 목록 하나에서 문구·화살표·지도 원이 모두 나온다. 앞 단계가 끝나야 다음 단계를 본다
 const onCore = c => c && c.state === 'active' && c.connected;
-const coreShown = c => (!c.ruin || G.seal2Open) && (!c.high || G.highOpen) && (!c.sea || G.seaOpen) && (!c.volc || G.volcOpen) && (!c.blight || G.blightOpen);
+const coreShown = c => (!c.canyon || G.canyonOpen) && (!c.ruin || G.seal2Open) && (!c.high || G.highOpen) && (!c.sea || G.seaOpen) && (!c.volc || G.volcOpen) && (!c.blight || G.blightOpen);
 const nearestCore = list => { let b = null, bd = 1e9; for (const c of list) { const [cx, cy] = coreCenter(c), d = Math.hypot(cx - P.x, cy - P.y); if (d < bd) { bd = d; b = c; } } return b; };
 function recipeNeed(id, ready) { const R = RECIPES.find(r => r.id === id), lock = recipeLock(R); if (lock) return lock; if (canPay(R.cost)) return ready; return `${R.name} 재료 · ` + Object.entries(R.cost).map(([k, v]) => `${RES[k].name} ${Math.min(res[k], v)}/${v}`).join(' · '); }
 function coreStepInfo(list) {
@@ -3374,7 +3651,7 @@ function coreStepInfo(list) {
   if (cut.length) { const c = nearestCore(cut); return { text: `전신주로 ${jo(c.name, '을')} 본거지와 이어라${list.length > 1 ? ` (연결 ${list.length - cut.length}/${list.length})` : ''}`, target: () => coreCenter(c) }; }
   return null;
 }
-const baseCores = () => cores.filter(c => !c.ruin && !c.branch && !c.sea), ruinCore = () => cores.find(c => c.ruin), highCore = () => cores.find(c => c.high), seaCore = () => cores.find(c => c.sea), volcCore = () => cores.find(c => c.volc), blightCore = () => cores.find(c => c.blight);
+const baseCores = () => cores.filter(c => !c.ruin && !c.branch && !c.sea && !c.optional), canyonCore = () => cores.find(c => c.canyon), ruinCore = () => cores.find(c => c.ruin), highCore = () => cores.find(c => c.high), seaCore = () => cores.find(c => c.sea), volcCore = () => cores.find(c => c.volc), blightCore = () => cores.find(c => c.blight);
 const QUESTS = [
   { id: 'turret', done: () => G.nights > 0 || G.sealOpen || structs.some(q => !q.dead && q.D.turret && !q.hostile && q.type !== 'relic'), info: () => ({ text: res.copper < 4 ? '구리를 캐라 — 바위 속 주황 광맥 (석궁 포탑에 필요)' : 'B로 석궁 포탑을 지어 첫 밤에 대비하라' }) },
   { id: 'key', done: () => G.sealOpen || P.keys > 0, info: () => ({ text: recipeNeed('key', '코어 옆에서 C → 열쇠·공물 → 봉인 열쇠') }) },
@@ -3413,6 +3690,16 @@ const BRANCH = [
     { id: 'mother', done: () => G.motherDown, info: () => ({ text: '오염지 코어 곁의 오염 모체를 쓰러뜨려라', target: bossAt('mother', blightCore) }) },
     { id: 'blightcore', done: () => onCore(blightCore()), info: () => coreStepInfo([blightCore()]) }] },
 ];
+// v41 화석 협곡(선택): 협곡 안에 있을 때만 목표 줄에 끼어든다
+const CANYON = [
+  { id: 'canyon', done: () => G.canyonOpen, info: () => ({ text: P.gear.pick3 ? '굳은 퇴적층을 캐고 동쪽 화석 협곡으로' : '굳은 퇴적층은 수정 곡괭이(C · 도구)로 캔다 — 너머는 화석 협곡', target: () => [(CONFIG.canyon.x0 - .5) * TS, (CONFIG.canyon.entY + .5) * TS] }) },
+  { id: 'wyrm', done: () => G.wyrmDown, info: () => ({ text: '협곡 동쪽 분지의 화석 거룡을 쓰러뜨려라 (붉은 원 = 솟는 뼈)', target: bossAt('wyrm', canyonCore) }) },
+  { id: 'canyoncore', done: () => onCore(canyonCore()), info: () => coreStepInfo([canyonCore()]) },
+];
+function canyonInfo() {
+  const z = zoneAt(P.x / TS, P.y / TS); if (z !== 'canyon' && !(z === 'ruin' && P.x > (CONFIG.ruins.x1 - 12) * TS && Math.abs(P.y / TS - CONFIG.canyon.entY) < 6 && !G.canyonOpen)) return null;
+  const st = CANYON.find(q => !q.done()); if (!st) return null; const inf = st.info(); return inf ? { ...inf, id: st.id, text: '화석 협곡 (선택) · ' + inf.text } : null;
+}
 function branchInfo() {
   const left = BRANCH.filter(b => !onCore(b.core())); if (!left.length) return null;
   const z = zoneAt(P.x / TS, P.y / TS), b = left.find(q => q.k === z) || left.find(q => q.k === G.lastBranch) || left[0]; G.lastBranch = b.k;
@@ -3421,11 +3708,12 @@ function branchInfo() {
 }
 function currentQuest() {
   if (!P || LAYER.kind !== 'valley') return null;
+  { const c = canyonInfo(); if (c) return c; }
   for (const q of QUESTS) if (!q.done()) { const inf = q.info(); if (inf) return { id: q.id, ...inf }; }
   return null;
 }
 // 앞 단계에서 이어 둔 코어가 끊기면 그게 먼저다
-function cutInterrupt(cq) { if (!cq || ['cores', 'ruincore', 'highcore', 'seacore', 'volccore', 'blightcore'].includes(cq.id)) return null; const c = cores.find(c2 => c2.state === 'active' && !c2.connected && c2.everConnected); return c ? { id: 'cut', text: `${c.name} 연결이 끊겼다 — 전신주로 다시 이어라`, target: () => coreCenter(c) } : null; }
+function cutInterrupt(cq) { if (!cq || ['cores', 'ruincore', 'highcore', 'seacore', 'volccore', 'blightcore', 'canyoncore'].includes(cq.id)) return null; const c = cores.find(c2 => c2.state === 'active' && !c2.connected && c2.everConnected); return c ? { id: 'cut', text: `${c.name} 연결이 끊겼다 — 전신주로 다시 이어라`, target: () => coreCenter(c) } : null; }
 function objTarget() {
   if (LAYER.kind !== 'valley' || G.finale) return null;
   if (G.postGame) return altarCenter();
@@ -3469,6 +3757,8 @@ function icon(kind, x, y) {
   if (kind === 'offer') { ctx.fillStyle = '#8a6a2a'; ctx.fillRect(-8, 4, 16, 5); ctx.fillStyle = '#d27ae8'; ctx.beginPath(); ctx.arc(0, -2, 6, 0, 7); ctx.fill(); ctx.fillStyle = '#f8d8ff'; ctx.beginPath(); ctx.arc(-2, -4, 2, 0, 7); ctx.fill(); }
   if (kind === 'sun') { ctx.fillStyle = '#e08a20'; ctx.beginPath(); ctx.moveTo(0, -7); ctx.lineTo(6, -1); ctx.lineTo(3, 6); ctx.lineTo(-4, 6); ctx.lineTo(-6, -1); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#ffe08a'; ctx.fillRect(-2, -3, 3, 3); }
   if (kind === 'rune') { ctx.fillStyle = '#2a8a7a'; ctx.fillRect(-6, -6, 12, 12); ctx.strokeStyle = '#a8fff0'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-2, -4); ctx.lineTo(2, 0); ctx.lineTo(-2, 4); ctx.moveTo(3, -4); ctx.lineTo(3, 4); ctx.stroke(); }
+  if (kind === 'fossil') { ctx.strokeStyle = '#e8dcc0'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(-5, 4); ctx.lineTo(5, -4); ctx.stroke(); ctx.fillStyle = '#f4ecd8'; for (const [bx, by] of [[-6, 2], [-4, 6], [6, -2], [4, -6]]) { ctx.beginPath(); ctx.arc(bx, by, 2.2, 0, 7); ctx.fill(); } }
+  if (kind === 'amber') { ctx.fillStyle = '#c86a10'; ctx.beginPath(); ctx.ellipse(0, 1, 5.5, 6.5, .4, 0, 7); ctx.fill(); ctx.fillStyle = '#ffb840'; ctx.beginPath(); ctx.ellipse(-1, 0, 3.6, 4.6, .4, 0, 7); ctx.fill(); ctx.fillStyle = '#6a3a10'; ctx.fillRect(-1, 0, 2, 1.5); }
   if (kind === 'crystal') { ctx.fillStyle = '#5fb8e8'; ctx.beginPath(); ctx.moveTo(0, -7); ctx.lineTo(5, 0); ctx.lineTo(0, 7); ctx.lineTo(-5, 0); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#d8f6ff'; ctx.fillRect(-1, -4, 2, 5); }
   ctx.restore();
 }
@@ -3481,7 +3771,7 @@ function drawHUD0(sw, sh) {
   // 왼쪽 위: 체력과 자원(+분당 수입)
   if (performance.now() - ui.incT > 500) { ui.incT = performance.now(); ui.inc = incomeNow(); }
   const showEss = G.gotEss || G.guardianDown || S.nests > 0 || layers.valley && layers.valley.g && layers.valley.g.sealOpen || G.sealOpen, showIron = G.gotIron || G.hard, showShard = G.postGame || res.shard > 0;
-  const RK = ['wood', 'stone', 'copper', 'crystal', 'essence', 'sun', 'rune', 'pearl', 'meteor', 'obsid', 'blightc', 'iron', 'shard'].filter(k => !(k === 'pearl' && !G.gotPearl) && !(k === 'meteor' && !G.gotMeteor) && !(k === 'obsid' && !G.gotObsid) && !(k === 'blightc' && !G.gotBlightc) && !(RUIN_RES(k) && !G.gotRuin) && !(k === 'iron' && !showIron) && !(k === 'shard' && !showShard) && !(k === 'crystal' && !G.gotCrystal) && !(k === 'essence' && !showEss));
+  const RK = ['wood', 'stone', 'copper', 'crystal', 'essence', 'sun', 'rune', 'pearl', 'meteor', 'fossil', 'amber', 'obsid', 'blightc', 'iron', 'shard'].filter(k => !((k === 'fossil' || k === 'amber') && !G.gotFossil) && !(k === 'pearl' && !G.gotPearl) && !(k === 'meteor' && !G.gotMeteor) && !(k === 'obsid' && !G.gotObsid) && !(k === 'blightc' && !G.gotBlightc) && !(RUIN_RES(k) && !G.gotRuin) && !(k === 'iron' && !showIron) && !(k === 'shard' && !showShard) && !(k === 'crystal' && !G.gotCrystal) && !(k === 'essence' && !showEss));
   const rows = Math.ceil(RK.length / 3), lw = 286, rh = 66 + rows * 24; frame(14, 14, lw, rh); hot(12, 12, lw + 4, rh + 4);
   uFont(15, 400, TITLE); uText('체력', 24, 36, INK);
   { const sp = Math.min(14, 180 / P.max), sc = Math.min(1, sp / 13); for (let k = 0; k < P.max; k++) { const x = 66 + k * sp, y = 25, full = k < P.hp; ctx.save(); ctx.translate(x, y + 4); ctx.scale(sc, sc); ctx.fillStyle = full ? '#d83a2a' : 'rgba(74,42,20,.25)'; ctx.beginPath(); ctx.arc(-2.5, -2, 3.2, 0, 7); ctx.arc(2.5, -2, 3.2, 0, 7); ctx.fill(); ctx.beginPath(); ctx.moveTo(-5.6, -1); ctx.lineTo(0, 5); ctx.lineTo(5.6, -1); ctx.fill(); ctx.restore(); } }
@@ -3548,6 +3838,7 @@ function drawHUD0(sw, sh) {
   }
   { const b = !G.finale && LAYER.kind === 'valley' ? enemies.find(e => !e.dead && e.K.leash && e.woke && Math.hypot(e.x - P.x, e.y - P.y) < 20 * TS) : null;
     if (b) { const bw2 = Math.min(420, sw - 300), bx2 = sw / 2 - bw2 / 2, by2 = 112; ctx.fillStyle = 'rgba(20,12,8,.75)'; ctx.fillRect(bx2 - 3, by2 - 3, bw2 + 6, 16); ctx.fillStyle = b.hp < b.max / 2 ? '#e07a4a' : '#ffd070'; ctx.fillRect(bx2, by2, bw2 * Math.max(0, b.hp) / b.max, 10); drawStagBar(b, bx2, by2 + 13, bw2); ctx.font = '17px ' + TITLE; ctx.fillStyle = '#ffe08a'; ctx.fillText(`${b.K.name} ${Math.max(0, Math.ceil(b.hp))}/${b.max}${b.open > 0 ? ' · 빈틈! 피해 2배' : ''}`, sw / 2, by2 + 34); } }
+  drawRegionCard(sw, sh);
   // 큰 사건만 화면 가운데 제목. 나머지는 좌하단 로그
   if (G.msg && G.msg.big) { ctx.globalAlpha = Math.min(1, G.msg.life); ctx.font = '30px ' + TITLE; ctx.fillStyle = 'rgba(0,0,0,.65)'; ctx.fillText(G.msg.t, sw / 2 + 2, 62); ctx.fillStyle = G.msg.col || '#fff4dc'; ctx.fillText(G.msg.t, sw / 2, 60); ctx.globalAlpha = 1; }
   if (G.msg2 && !ui.menu) { ctx.globalAlpha = Math.min(1, G.msg2.life); ctx.font = '500 13px ' + FONT; const w = ctx.measureText(G.msg2.t).width + 20; ctx.fillStyle = 'rgba(20,12,8,.7)'; ctx.fillRect(sw / 2 - w / 2, 74, w, 22); ctx.fillStyle = '#f3e2c0'; ctx.fillText(G.msg2.t, sw / 2, 89); ctx.globalAlpha = 1; }
@@ -3611,6 +3902,6 @@ function loop(now) {
 }
 requestAnimationFrame(loop);
 cv.focus();
-window.__seal = { pickRaidTarget, spawnRaids, spawnQLen: () => spawnQ.length, spawnQList: () => spawnQ, camPos: () => [cam.x, cam.y], planChain, dragLine, lineEnd, drainCmds: () => { while (cmdQ.length) applyCommand(0, cmdQ.shift()); }, isNode, fN, openSlots, closeSlots, pickSlot, newSlot, deleteSlot, slotInfo, setSlot, slotNow: () => curSlot, uiSlots: () => ui.slots, openSea, swimAI, leviAI, padList, nearPad, usePad, currentQuest, QUESTS, CONFIG, threatN, threatStage, spawnNight, openHigh, checkPurify, ruinRegrow, warmAt, overPit, genHigh, TILES_ALL: TILES, useSkill, staggerBoss, SKILLS, hurtEnemy, bossAI, autoSave, blightTick, hitsTo, readCheckpoint, restoreCheckpoint, cpMilestone, ui: () => uiRects.filter(r => r.id).map(r => ({ id: r.id, x: (r.x + r.w / 2) * UIK, y: (r.y + r.h / 2) * UIK, dis: !!r.dis })), uik: () => UIK, uiState: () => ({ menu: ui.menu, tab: ui.tab, craftCat: ui.craftCat, hover: ui.hoverR && ui.hoverR.id, preview: !!ui.preview }), openMenu, closeMenu, makeEnemy, objTarget, zoom: () => CONFIG.ZOOM, losClear, turretFire, recomputeNet, wDmg, gainXP, drawTips: () => { let n = 0; for (const r of uiRects.slice()) if (r.tip) { drawTip(typeof r.tip === 'function' ? r.tip() : r.tip, 1200, 700, r); n++; } return n; }, hasMod, lvStats, incomeNow, blockedTile, RECIPES, RESEARCH, STRUCTURES, CORE_LV, TILES, openSeal2, jo, cleanNum, startRecall, flyWay, pylonLink, openVolc, openBlight, heartsLeft, BRANCH, branchInfo, addBomb, updBombs, volcTick, blightZoneTick, rockAt, altarHint, reclaimRelic, nearRelic, relicWhy, zoneAt, openCache, interact, makeTablet, enterTablet, reachEnding, endContinue, floorClear, abyssLayer: () => LAYER, damageCore, saveGame, loadGame, clearSave, enterAbyss, leaveAbyss, layerInfo: () => ({ kind: LAYER.kind, W, H, N }), warp, warpWhy, dropAcc, refreshMods, accMods, useCharm, openChar, summonBoss, enterHardmode, useAltar, objective, damageStruct, restoreRuins, growNest, hurtNest, pathOK, cutsPath, step, applyCommand, get: () => ({ P, G, S, res, enemies, structs, cores, tile, fieldG, fieldF, terrConn, gates, tech, sel }), openSeal, spawnFlood, newGame, canPlace, setSel, draw, T, idx, calm: () => { spawnQ.length = 0; floods.length = 0; enemies.forEach(e => e.dead = true); } };
+window.__seal = { baseCores, coreLock, REGIONS, regionTick, PREFABS, prefabErrors, pfShape, placePrefab, pfReach, prefabsPlaced: () => ({ surf: surfPrefabs, canyon: canyonPrefabs }), openCanyon, ensureCanyon, canyonTunnel, cliffLv, lvAt, wetAt, boneSpikes, canyonInfo, CANYON, pickRaidTarget, spawnRaids, spawnQLen: () => spawnQ.length, spawnQList: () => spawnQ, camPos: () => [cam.x, cam.y], planChain, dragLine, lineEnd, drainCmds: () => { while (cmdQ.length) applyCommand(0, cmdQ.shift()); }, isNode, fN, openSlots, closeSlots, pickSlot, newSlot, deleteSlot, slotInfo, setSlot, slotNow: () => curSlot, uiSlots: () => ui.slots, openSea, swimAI, leviAI, padList, nearPad, usePad, currentQuest, QUESTS, CONFIG, threatN, threatStage, spawnNight, openHigh, checkPurify, ruinRegrow, warmAt, overPit, genHigh, TILES_ALL: TILES, useSkill, staggerBoss, SKILLS, hurtEnemy, bossAI, autoSave, blightTick, hitsTo, readCheckpoint, restoreCheckpoint, cpMilestone, ui: () => uiRects.filter(r => r.id).map(r => ({ id: r.id, x: (r.x + r.w / 2) * UIK, y: (r.y + r.h / 2) * UIK, dis: !!r.dis })), uik: () => UIK, uiState: () => ({ menu: ui.menu, tab: ui.tab, craftCat: ui.craftCat, hover: ui.hoverR && ui.hoverR.id, preview: !!ui.preview }), openMenu, closeMenu, makeEnemy, objTarget, zoom: () => CONFIG.ZOOM, losClear, turretFire, recomputeNet, wDmg, gainXP, drawTips: () => { let n = 0; for (const r of uiRects.slice()) if (r.tip) { drawTip(typeof r.tip === 'function' ? r.tip() : r.tip, 1200, 700, r); n++; } return n; }, hasMod, lvStats, incomeNow, blockedTile, RECIPES, RESEARCH, STRUCTURES, CORE_LV, TILES, openSeal2, jo, cleanNum, startRecall, flyWay, pylonLink, openVolc, openBlight, heartsLeft, BRANCH, branchInfo, addBomb, updBombs, volcTick, blightZoneTick, rockAt, altarHint, reclaimRelic, nearRelic, relicWhy, zoneAt, openCache, interact, makeTablet, enterTablet, reachEnding, endContinue, floorClear, abyssLayer: () => LAYER, damageCore, saveGame, loadGame, clearSave, enterAbyss, leaveAbyss, layerInfo: () => ({ kind: LAYER.kind, W, H, N }), warp, warpWhy, dropAcc, refreshMods, accMods, useCharm, openChar, summonBoss, enterHardmode, useAltar, objective, damageStruct, restoreRuins, growNest, hurtNest, pathOK, cutsPath, step, applyCommand, get: () => ({ P, G, S, res, enemies, structs, cores, tile, fieldG, fieldF, terrConn, gates, tech, sel }), openSeal, spawnFlood, newGame, canPlace, setSel, draw, T, idx, calm: () => { spawnQ.length = 0; floods.length = 0; enemies.forEach(e => e.dead = true); } };
 })();
 </script>
