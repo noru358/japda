@@ -841,7 +841,10 @@ console.log('\n# v41');
     b.hp = 1; t.hurtEnemy(b, 50, 'sword', true); run(.2); s = t.get(); ok(s.G.wyrmDown && s.res.fossil >= 12 && s.G.gotFossil && !t.coreLock(cc), 'wyrm down: fossils, core released'); }
   // 협곡 장비·연구
   { s = t.get(); for (const k in s.res) s.res[k] = 999; const m0 = s.P.max; s.P.x = (C.surface.cx + .5) * 16; s.P.y = (C.surface.cy + 2) * 16; t.applyCommand(0, { type: 'craft', id: 'bonemail' }); t.applyCommand(0, { type: 'craft', id: 'amberscope' }); s = t.get();
-    ok(s.P.bonemail && s.P.max === m0 + 3 && s.P.amberscope && t.accMods(s.P).xbowRange >= .25, 'fossil pauldron and amber scope'); t.applyCommand(0, { type: 'research', id: 'defH' }); ok(s.tech.defH, 'high-ground research unlocks with fossils'); }
+    ok(s.P.bonemail && s.P.max === m0 + 3 && s.P.amberscope && t.accMods(s.P).xbowRange >= .25, 'fossil pauldron and amber scope'); t.applyCommand(0, { type: 'research', id: 'defH' }); ok(s.tech.defH, 'high-ground research unlocks with fossils');
+    const hx = C.surface.cx, hy = C.surface.cy + 4; s.tile[idx(hx + 3, hy)] = T.GRASS; s.G.ver++; t.recomputeNet(); t.applyCommand(0, { type: 'build', sid: 'wall', tx: hx + 3, ty: hy }); const w = t.get().structs.find(q => q.type === 'wall' && q.x === hx + 3 && q.y === hy);
+    let drew = true; if (w) { w.lv = 4; try { t.drawStruct(w); t.draw(); } catch (e) { drew = false; console.log(e.stack); } } ok(w && drew && t.STRUCTURES.wall.lv[4].tech === 'defH', 'fossil-frame wall (wall lv5) draws');
+    const f0 = s.res.fossil; t.openCache(K.core[0], K.core[1] + 6); ok(s.res.fossil > f0, 'canyon caches hold fossils and amber'); }
   // 지역 이름 카드
   { t.calm(); s = t.get(); s.G.zSeen = {}; s.G.zNow = null; s.G.card = null; s.P.alive = true; s.P.x = (C.surface.cx + .5) * 16; s.P.y = (C.surface.cy + 3) * 16; run(1); ok(s.G.card && s.G.card.z === 'surface' && s.G.card.big, 'first visit: big region card');
     s.P.x = (C.beyond.x0 + 6) * 16; s.P.y = 50 * 16; s.G.card = null; t.regionTick(.3); ok(!s.G.card, 'no card while just brushing a border'); t.regionTick(.5); ok(s.G.card && s.G.card.z === 'cave', 'card after staying');

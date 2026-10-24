@@ -1166,7 +1166,7 @@ function paintFloor(x, y) {
   if (t === T.MIRE) { o.fillStyle = 'rgba(20,10,20,.25)'; if (h < .35) o.fillRect(px + 3 + h * 8, py + 6, 4, 2); o.fillStyle = 'rgba(160,120,150,.18)'; if (h > .8) { o.beginPath(); o.arc(px + 10, py + 9, 1.6, 0, 7); o.fill(); } }
   if (t === T.BLIGHT) { o.strokeStyle = 'rgba(200,90,200,.35)'; o.lineWidth = 1; o.beginPath(); o.moveTo(px, py + 4 + h * 8); o.quadraticCurveTo(px + 8, py + 2 + h * 6, px + TS, py + 6 + h * 5); o.stroke(); if (h > .75) { o.fillStyle = 'rgba(230,120,220,.35)'; o.beginPath(); o.arc(px + 4 + h * 6, py + 11, 1.5, 0, 7); o.fill(); } }
   if (t === T.CRACK) { o.fillStyle = '#05030a'; o.beginPath(); o.ellipse(px + 8, py + 9, 7, 5, 0, 0, 7); o.fill(); o.strokeStyle = '#6a3a8a'; o.lineWidth = 1; o.stroke(); }
-  if (!solidT(t) && isBlockAt(x, y - 1)) { o.fillStyle = 'rgba(0,0,0,.28)'; o.fillRect(px, py, TS, 4); o.fillStyle = 'rgba(0,0,0,.12)'; o.fillRect(px, py + 4, TS, 3); }
+  if (!solidT(t) && isBlockAt(x, y - 1) && tile[idx(x, y - 1)] !== T.CLIFF) { o.fillStyle = 'rgba(0,0,0,.28)'; o.fillRect(px, py, TS, 4); o.fillStyle = 'rgba(0,0,0,.12)'; o.fillRect(px, py + 4, TS, 3); }
 }
 const paintAround = (x, y) => { for (let dy = -1; dy <= 2; dy++) for (let dx = -1; dx <= 1; dx++) paintFloor(x + dx, y + dy); };
 function setTile(x, y, t) { tile[idx(x, y)] = t; paintAround(x, y); G.flowDirty = true; G.mmDirty = true; G.ver++; }
@@ -1583,8 +1583,8 @@ function reclaimRelic(p, s) {
 }
 // 유물 상자: 캐면 자원 묶음, 25%로 장신구
 function openCache(tx, ty) {
-  const x = (tx + .5) * TS, y = (ty + .5) * TS, got = { copper: ri(3, 7), crystal: ri(2, 5), [Math.random() < .5 ? 'sun' : 'rune']: ri(3, 6) };
-  for (const k in got) res[k] += got[k]; gotRuinRes(); G.gotCrystal = true;
+  const can = zoneAt(tx, ty) === 'canyon', x = (tx + .5) * TS, y = (ty + .5) * TS, got = can ? { copper: ri(3, 7), fossil: ri(3, 6), amber: ri(2, 4) } : { copper: ri(3, 7), crystal: ri(2, 5), [Math.random() < .5 ? 'sun' : 'rune']: ri(3, 6) };
+  for (const k in got) res[k] += got[k]; if (can) G.gotFossil = true; else gotRuinRes(); G.gotCrystal = true;
   pop(Object.entries(got).map(([k, v]) => `+${v} ${RES[k].name}`).join(' '), x, y - 22, '#ffe08a'); burst(x, y - 6, '#ffd060', 22, 110); SFX.play('craft');
   const vault = D4.some(([dx, dy]) => inb(tx + dx, ty + dy) && tile[idx(tx + dx, ty + dy)] === T.VAULTF);
   if (vault) { res.sun += 4; res.rune += 4; if (Math.random() < .6) dropAcc(x, y + 10, 3); pop('금고!', x, y - 34, '#ffe08a'); }
@@ -1733,7 +1733,7 @@ function makeEnemy(k, x, y, force, noElite) {
   const elite = !K.boss && !force && !noElite && Math.random() < CONFIG.drops.elite, hpE = elite ? hp0 * 3 : hp0;
   const e = { k, K, x, y, r: K.r, hp: hpE, max: hpE, elite, dm: 1 + CONFIG.abyss.dmgPer * deep, vx: 0, vy: 0, atkT: rnd(0, .4), flash: 0, sleep: false, chase: false, trapT: 0, ph: rnd(0, 6), kb: 0, dead: false, fade: .3, face: 1, slow: 0, lunge: 0 };
   enemies.push(e);
-  const intro = { heart: '오염 심장: 가까이 가면 새끼를 뿜고, 둘레 땅을 오염시킨다. 셋을 모두 터뜨려야 오염 모체가 고치에서 나온다', salamander: '용암 도롱뇽: 단단하다(검·화살 1 덜 박힘). 흑요석을 떨군다', bomber: '부풀이: 건물이나 나에게 닿으면 터진다. 다가오기 전에 쏴서 터뜨려라', hook: '갈고리 도깨비: 붉은 선이 보이면 벽 뒤로 숨어라. 끌려간다', hex: '마비 정령: 포탑에 붙어 멈춘다. 직접 떼어내거나 결계 등불 범위에 포탑을 두어라', golem: '돌 골렘: 단단해서 화살·검이 2씩 덜 박힌다. 광선·투석·화상이 잘 듣는다' }[k];
+  const intro = { heart: '오염 심장: 가까이 가면 새끼를 뿜고, 둘레 땅을 오염시킨다. 셋을 모두 터뜨려야 오염 모체가 고치에서 나온다', salamander: '용암 도롱뇽: 단단하다(검·화살 1 덜 박힘). 흑요석을 떨군다', bomber: '부풀이: 건물이나 나에게 닿으면 터진다. 다가오기 전에 쏴서 터뜨려라', hook: '갈고리 도깨비: 붉은 선이 보이면 벽 뒤로 숨어라. 끌려간다', hex: '마비 정령: 포탑에 붙어 멈춘다. 직접 떼어내거나 결계 등불 범위에 포탑을 두어라', golem: '돌 골렘: 단단해서 화살·검이 2씩 덜 박힌다. 광선·투석·화상이 잘 듣는다', scarab: '호박 풍뎅이: 단단하고(방어 2) 벽을 부수며 온다. 광선·투석이 잘 듣는다', raptor: '화석 랩터: 빠르다. 계단 길목을 단 위 포탑으로 지켜라' }[k];
   if (intro && !G.hints[k]) { G.hints[k] = true; say2(intro); }
   return e;
 }
@@ -2186,7 +2186,7 @@ function drawBossTele() {
     if (e.dead || !e.K.boss) continue;
     if (e.ls && e.ls.st === 'tele') { const f = 1 - Math.max(0, e.ls.t) / (e.hp < e.max / 2 ? .85 : 1.1), R = 1.6 * TS; for (const [mx, my] of e.ls.marks) { ctx.fillStyle = `rgba(220,60,40,${.12 + .25 * f})`; ctx.beginPath(); ctx.ellipse(mx, my, R * f, R * f * .6, 0, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(220,60,40,.8)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(mx, my, R, R * .6, 0, 0, 7); ctx.stroke(); } }
     if (e.K.leash && e.slam > 0) { const f = 1 - e.slam / .9, R = 2.4 * TS; ctx.fillStyle = `rgba(220,60,40,${.12 + .25 * f})`; ctx.beginPath(); ctx.ellipse(e.x, e.y, R * f, R * f * .6, 0, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(220,60,40,.7)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(e.x, e.y, R, R * .6, 0, 0, 7); ctx.stroke(); }
-    const b = e.bs; if (!b || b.st !== 'tele') continue; const tot = (b.kind === 'charge' ? .9 : b.kind === 'slam' ? .8 : b.kind === 'breath' || b.kind === 'erupt' ? 1 : .7) * (e.hp < e.max / 2 ? .8 : 1), f = Math.max(0, Math.min(1, 1 - b.t / tot));
+    const b = e.bs; if (!b || b.st !== 'tele' || b.kind === 'spikes') continue; const tot = (b.kind === 'charge' ? .9 : b.kind === 'slam' ? .8 : b.kind === 'breath' || b.kind === 'erupt' ? 1 : .7) * (e.hp < e.max / 2 ? .8 : 1), f = Math.max(0, Math.min(1, 1 - b.t / tot));
     ctx.save(); ctx.strokeStyle = 'rgba(220,60,40,.8)'; ctx.lineWidth = 1.5;
     if (b.kind === 'charge') { const L = CONFIG.boss.chargeLen * TS, w = e.r * 2 + 8, a = Math.atan2(b.dy, b.dx); ctx.translate(e.x, e.y); ctx.rotate(a); ctx.fillStyle = `rgba(220,60,40,${.10 + .22 * f})`; ctx.fillRect(0, -w / 2, L * f, w); ctx.strokeRect(0, -w / 2, L, w); }
     else if (b.kind === 'slam') { const R = 2.6 * TS; ctx.fillStyle = `rgba(220,60,40,${.12 + .25 * f})`; ctx.beginPath(); ctx.ellipse(e.x, e.y, R * f, R * f * .6, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(e.x, e.y, R, R * .6, 0, 0, 7); ctx.stroke(); }
@@ -2452,7 +2452,7 @@ function regrowTree() {
 // 두 점 사이에 단단한 지형(벽·바위)이 있는지. 건물은 막지 않는다
 function losClear(x0, y0, x1, y1) { const d = Math.hypot(x1 - x0, y1 - y0), n = Math.ceil(d / 6); for (let k = 1; k < n; k++) { const t2 = k / n; if (solidT(tile[tileOf(x0 + (x1 - x0) * t2, y0 + (y1 - y0) * t2)])) return false; } return true; }
 function turretFire(o, L, sx, sy, kind, mul = 1) {
-  const burn = !!(tech.atkS && o.D), rng = L.range + (tech.atk4 && o.D ? 1 : 0) + (tech.atkS && o.D ? 1 : 0) + (tech.eco4 && o.isCore ? 2 : 0) + (o.x !== undefined && inb(o.x, o.y) && TILES[tile[idx(o.x, o.y)]].hi ? (tech.defH ? 2 : 1) : 0), R = rng * TS; const dmg = Math.round((L.dmg + (tech.ess1 ? 1 : 0) + (tech.atk4 && o.D ? 2 : 0)) * mul);
+  const burn = !!(tech.atkS && o.D), rng = L.range + (tech.atk4 && o.D ? 1 : 0) + (tech.atkS && o.D ? 1 : 0) + (tech.eco4 && o.isCore ? 2 : 0) + ((o.D || o.isCore) && inb(o.x, o.y) && TILES[tile[idx(o.x, o.y)]].hi ? (tech.defH ? 2 : 1) : 0), R = rng * TS; const dmg = Math.round((L.dmg + (tech.ess1 ? 1 : 0) + (tech.atk4 && o.D ? 2 : 0)) * mul);
   const noAir = kind === 'shell' || !!(o.D && o.D.noAir), cand = [];
   for (const e of enemies) { if (e.dead || e.sleep) continue; if (noAir && e.K.fly) continue; const d = Math.hypot(e.x - sx, e.y - sy); if (d > R) continue; if (kind === 'shell' && d < (L.min || 0) * TS) continue; cand.push([e, d]); }
   if (!cand.length) return false;
@@ -2864,7 +2864,7 @@ const ROLE = {
 };
 const techName = id => (RESEARCH.find(r => r.id === id) || {}).name || id;
 function buildTip(id) {
-  const D = STRUCTURES[id], L = D.lv[0], c = buildCost(D), path = D.lv.slice(1).map((l, i) => [`${i + 2}단계 ${l.name}${l.tech ? ` · 연구 ${techName(l.tech)}` : l.abyss ? ' · 엔딩 후 심연 파편' : ''}${l.perk ? ` — ${l.perk}` : ''}`, l.perk ? TIP_GOOD : TIP_DIM]); if (D.turret) path.push([`보스에게는 피해 ${Math.round(CONFIG.boss.turretMul * 100)}%만 들어간다 — 보스는 직접 잡는다`, TIP_DIM]);
+  const D = STRUCTURES[id], L = D.lv[0], c = buildCost(D), path = D.lv.slice(1).map((l, i) => [`${i + 2}단계 ${l.name}${l.tech ? ` · 연구 ${techName(l.tech)}` : l.abyss ? ' · 엔딩 후 심연 파편' : ''}${l.perk ? ` — ${l.perk}` : ''}`, l.perk ? TIP_GOOD : TIP_DIM]); if (D.turret) path.push([`보스에게는 피해 ${Math.round(CONFIG.boss.turretMul * 100)}%만 들어간다 — 보스는 직접 잡는다`, TIP_DIM], [`단(높은 땅) 위에 지으면 사거리 +${tech.defH ? 2 : 1}`, TIP_GOOD]);
   const why = []; if (D.tech && !tech[D.tech]) why.push(`연구 필요: ${techName(D.tech)}`); if (!canPay(c)) why.push('자원 부족');
   return { title: D.name, tag: GRP[D.grp].name, desc: ROLE[id], rows: statRowsOf(lvStats(L, D)), lines: path, cost: c, costLabel: '짓는 비용', why };
 }
@@ -2877,7 +2877,7 @@ function researchUnlocks(id) {
 function researchWhy(R) {
   const w = [];
   if (R.req && !R.req.every(q => tech[q])) w.push('선행 연구: ' + R.req.filter(q => !tech[q]).map(techName).join(', '));
-  if (R.needsCrystal && !G.gotCrystal) w.push('수정을 처음 얻으면 열린다'); if (R.needsEss && !G.gotEss) w.push('둥지를 부숴 정수를 얻으면 열린다'); if (R.needsIron && !G.gotIron) w.push('흑철을 얻으면 열린다 (수호자를 쓰러뜨린 뒤)'); if (R.needsRuin && !G.gotRuin) w.push('태양석·룬석을 얻으면 열린다 (사원)');
+  if (R.needsCrystal && !G.gotCrystal) w.push('수정을 처음 얻으면 열린다'); if (R.needsEss && !G.gotEss) w.push('둥지를 부숴 정수를 얻으면 열린다'); if (R.needsIron && !G.gotIron) w.push('흑철을 얻으면 열린다 (수호자를 쓰러뜨린 뒤)'); if (R.needsRuin && !G.gotRuin) w.push('태양석·룬석을 얻으면 열린다 (사원)'); if (R.needsCanyon && !G.gotFossil) w.push('화석·호박을 얻으면 열린다 (화석 협곡)');
   return w;
 }
 
@@ -2952,6 +2952,8 @@ function recipeRows(R) {
     case 'armor3': return [['최대 체력', p.max, p.max + 4], ['받는 피해', 0, -1, true]];
     case 'armorR': return [['최대 체력', p.max, p.max + 4]];
     case 'armor4': return [['최대 체력', p.max, p.max + 5]];
+    case 'bonemail': return [['최대 체력', p.max, p.max + 3], ['단 위에서 받는 피해', 0, -1, true]];
+    case 'amberscope': return [['석궁 사거리', Math.round(WEAPONS.xbow.range * (1 + (p.mods.xbowRange || 0)) / TS * 10) / 10, Math.round(WEAPONS.xbow.range * (1 + (p.mods.xbowRange || 0) + .25) / TS * 10) / 10, false, '칸']];
     case 'boots': return [['이동 속도', sp, Math.round(sp * 1.2), false, '%'], ['돌진 쿨다운', 100, 70, true, '%']];
     case 'boots2': return [['이동 속도', sp, Math.round(sp * 1.3 / 1.2), false, '%'], ['돌진 쿨다운', 70, 55, true, '%']];
     case 'bladeS': return [[`무기 피해 (${WEAPONS[p.cur].name})`, weaponDmg(p.cur), weaponDmg(p.cur, 1)], ['맞은 적 화상', '없음', '3초']];
@@ -2965,7 +2967,7 @@ function recipeRows(R) {
 }
 function recipeIcon(R, x, y, s = 1) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  const k = R.wt ? R.wt.id : R.id.startsWith('boots') ? 'boots' : R.id.startsWith('armor') ? 'armor' : R.id.startsWith('blade') ? 'blade' : R.id.startsWith('pick') ? 'pick' : R.id.startsWith('offer') ? 'offer' : R.id;
+  const k = R.wt ? R.wt.id : R.id === 'bonemail' ? 'armor' : R.id === 'amberscope' ? 'xbow' : R.id.startsWith('boots') ? 'boots' : R.id.startsWith('armor') ? 'armor' : R.id.startsWith('blade') ? 'blade' : R.id.startsWith('pick') ? 'pick' : R.id.startsWith('offer') ? 'offer' : R.id;
   icon(k, 0, 0); ctx.restore();
 }
 function recipeTip(R) {
@@ -2992,6 +2994,7 @@ function drawSelPanel(sw, sh) {
   else {
     if ((o.D.turret || o.type === 'drill' || o.type === 'totem' || o.type === 'lamp') && !o.active) status.push(['영역 밖이거나 끊겨서 멈춰 있다', BAD]);
     if (o.D.turret && o.jamT > G.clock) status.push(['마비 정령이 붙어 멈췄다 — 처치하거나 결계 등불 범위에 두기', BAD]);
+    if (o.D.turret && TILES[tile[idx(o.x, o.y)]].hi) status.push([`고지대(단 위) — 사거리 +${tech.defH ? 2 : 1}`, GOOD]);
     { const pk = [...o.D.lv.slice(0, o.lv + 1)].reverse().find(l => l.perk); if (pk) status.push(['특수: ' + pk.perk, GOOD]); const nx = o.D.lv[o.lv + 1]; if (nx && nx.perk) status.push(['다음 단계 특수: ' + nx.perk, INK2]); }
     if (o.type === 'drill') { const R = refOf(o); status.push([`제련: ${R.name} (${costText(R.in)} → ${RES[R.out].name} 1)`, INK2]); if (o.idle) status.push([`재료가 모자라 쉬고 있다 (재료마다 ${REF_KEEP}개는 남겨 둔다)`, BAD]); }
     if (isNode(o) && !o.connected) status.push(['꺼짐: 기지 영역과 떨어졌다(뿌리 코어가 잠들었거나 영역이 안 닿는다)', BAD]);
@@ -3392,14 +3395,14 @@ function drawTree(x, y) {
   ctx.fillStyle = 'rgba(190,240,140,.35)'; ctx.beginPath(); ctx.arc(px - 3 + sway, cy - 6, 3.5, 0, 7); ctx.fill();
   if (h > .82) { ctx.fillStyle = '#e85a4a'; ctx.fillRect(px + 3 + sway, cy + 1, 2, 2); ctx.fillRect(px - 5 + sway, cy + 3, 2, 2); }
 }
-const WALL_COL = [['#a8a398', '#76716a'], ['#c4b8a0', '#8a7e68'], ['#8aa8c8', '#4a6888'], ['#6ac8b8', '#3a7a70']];
+const WALL_COL = [['#a8a398', '#76716a'], ['#c4b8a0', '#8a7e68'], ['#8aa8c8', '#4a6888'], ['#6ac8b8', '#3a7a70'], ['#e8dcc0', '#a89878']];
 function drawBlock(px, py, top, face, fl) { ctx.fillStyle = fl ? '#fff' : top; ctx.fillRect(px, py - WH, TS, TS); ctx.fillStyle = fl ? '#eee' : face; ctx.fillRect(px, py - WH + TS, TS, WH); ctx.fillStyle = 'rgba(0,0,0,.4)'; ctx.fillRect(px, py - WH, 1, TS + WH); ctx.fillRect(px + TS - 1, py - WH, 1, TS + WH); ctx.fillRect(px, py - WH, TS, 1); ctx.fillRect(px, py + TS - 1, TS, 1); ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(px + 1, py - WH + 1, TS - 2, 1); }
 function lvPips(s, px, py) { if (!s.lv) return; ctx.fillStyle = '#ffd86a'; for (let k = 0; k < s.lv; k++) ctx.fillRect(px + 2 + k * 4, py + TS - 4, 2, 2); }
 function drawStruct(s, ghost) {
   const px = s.x * TS, py = s.y * TS, cx = px + 8, fl = s.flash > 0 && !ghost, L = s.D.lv[s.lv || 0];
   if (s.type === 'trap') { const c = ['#5a4630', '#4a5a28', '#3a5a7a', '#2a6a64'][s.lv || 0]; ctx.fillStyle = fl ? '#fff' : c; ctx.fillRect(px + 2, py + 3, 12, 11); ctx.fillStyle = s.lv === 2 ? '#a8ecff' : '#e0d8c8'; for (let k = 0; k < 6; k++) { const qx = px + 3 + (k % 3) * 4, qy = py + 5 + ((k / 3) | 0) * 5; ctx.beginPath(); ctx.moveTo(qx, qy + 3); ctx.lineTo(qx + 1.5, qy - 2); ctx.lineTo(qx + 3, qy + 3); ctx.fill(); } if (s.lv === 1) { ctx.fillStyle = 'rgba(140,220,80,.35)'; ctx.fillRect(px + 2, py + 3, 12, 11); } if (!ghost && sel && sel.o === s) { ctx.strokeStyle = '#ffd86a'; ctx.setLineDash([2, 2]); ctx.strokeRect(px + .5, py + .5, TS - 1, TS - 1); ctx.setLineDash([]); } return; }
   ctx.fillStyle = 'rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(cx, py + 14, 9, 3, 0, 0, 7); ctx.fill();
-  if (s.type === 'wall') { const [t, f] = WALL_COL[s.lv || 0]; drawBlock(px, py, t, f, fl); ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(px, py - WH + 7, TS, 1); ctx.fillRect(px + 7, py - WH, 1, 7); ctx.fillRect(px + 3, py - WH + 8, 1, 8); ctx.fillRect(px + 11, py - WH + 8, 1, 8); if (s.lv === 2) { ctx.fillStyle = '#bfe8ff'; ctx.fillRect(px + 5, py - WH + 3, 2, 9); ctx.fillRect(px + 10, py - WH + 6, 1, 7); } if (s.lv === 3) { ctx.strokeStyle = '#d8fff4'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px + 5, py - WH + 3); ctx.lineTo(px + 8, py - WH + 8); ctx.lineTo(px + 5, py - WH + 12); ctx.moveTo(px + 11, py - WH + 3); ctx.lineTo(px + 11, py - WH + 12); ctx.stroke(); } lvPips(s, px, py); }
+  if (s.type === 'wall') { const [t, f] = WALL_COL[s.lv || 0]; drawBlock(px, py, t, f, fl); ctx.fillStyle = 'rgba(0,0,0,.18)'; ctx.fillRect(px, py - WH + 7, TS, 1); ctx.fillRect(px + 7, py - WH, 1, 7); ctx.fillRect(px + 3, py - WH + 8, 1, 8); ctx.fillRect(px + 11, py - WH + 8, 1, 8); if (s.lv === 2) { ctx.fillStyle = '#bfe8ff'; ctx.fillRect(px + 5, py - WH + 3, 2, 9); ctx.fillRect(px + 10, py - WH + 6, 1, 7); } if (s.lv === 3) { ctx.strokeStyle = '#d8fff4'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px + 5, py - WH + 3); ctx.lineTo(px + 8, py - WH + 8); ctx.lineTo(px + 5, py - WH + 12); ctx.moveTo(px + 11, py - WH + 3); ctx.lineTo(px + 11, py - WH + 12); ctx.stroke(); } if (s.lv === 4) { ctx.strokeStyle = '#8a7a5a'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px + 2, py - WH + 4); ctx.quadraticCurveTo(px + 8, py - WH + 1, px + 14, py - WH + 4); ctx.moveTo(px + 2, py - WH + 10); ctx.quadraticCurveTo(px + 8, py - WH + 7, px + 14, py - WH + 10); ctx.stroke(); ctx.fillStyle = '#ffa830'; ctx.fillRect(px + 7, py - WH + 5, 2, 2); } lvPips(s, px, py); }
   else if (s.type === 'drill') { drawBlock(px, py + 2, '#7a6a52', '#54483a', fl); ctx.save(); ctx.translate(cx, py - WH + 8); ctx.rotate(s.spin || 0); ctx.fillStyle = '#c8c0b0'; ctx.fillRect(-5, -1.5, 10, 3); ctx.fillRect(-1.5, -5, 3, 10); ctx.restore(); const r = ghost ? null : oreNear(s.x, s.y); ctx.fillStyle = r ? RES[r].col : '#6a6a6a'; ctx.fillRect(cx - 2, py - WH + 6, 4, 4); if (!ghost && !s.active) { ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(px, py - WH + 2, TS, TS + WH); } lvPips(s, px, py + 2); }
   else if (s.type === 'relay') { const on = ghost || s.connected, gl = .6 + .4 * Math.sin(G.clock * 3 + s.x); drawBlock(px + 2, py + 6, '#8a847a', '#5a564e', fl); ctx.fillStyle = fl ? '#fff' : s.lv ? '#3a6a64' : '#5a5a62'; ctx.fillRect(cx - 3, py - 26, 6, 30); ctx.fillStyle = '#3a2a1a'; ctx.fillRect(cx - 8, py - 22, 16, 2); ctx.fillRect(cx - 6, py - 12, 12, 2); ctx.fillStyle = on ? `rgba(127,214,255,${gl})` : '#6a6a6a'; ctx.beginPath(); ctx.moveTo(cx, py - 36); ctx.lineTo(cx + 4, py - 29); ctx.lineTo(cx, py - 24); ctx.lineTo(cx - 4, py - 29); ctx.closePath(); ctx.fill(); }
   else if (s.type === 'pylon') { ctx.fillStyle = fl ? '#fff' : ['#6a4a2a', '#5a5a5a', '#4a6888', '#2a8a7a'][s.lv || 0]; ctx.fillRect(cx - 2, py - 18, 4, 31); ctx.fillStyle = '#3a2a1a'; ctx.fillRect(cx - 7, py - 15, 14, 2); const on = ghost || s.connected; ctx.fillStyle = on ? '#ffd86a' : '#7a7a7a'; ctx.beginPath(); ctx.arc(cx, py - 21, 3, 0, 7); ctx.fill(); if (on && !ghost) { ctx.fillStyle = 'rgba(255,216,106,.22)'; ctx.beginPath(); ctx.arc(cx, py - 21, 7, 0, 7); ctx.fill(); } lvPips(s, px, py); }
@@ -3584,7 +3587,7 @@ function draw() {
       if (STRUCTURES[G.bsel].lv[0].link && planChain(G.bsel, mtx, mty).list.length > (canPlace(G.bsel, mtx, mty) ? 0 : 1)) { drawChainPlan(mtx, mty); } else {
       const why = canPlace(G.bsel, mtx, mty); ctx.globalAlpha = .55; drawStruct({ type: G.bsel, D: STRUCTURES[G.bsel], lv: 0, x: mtx, y: mty, hp: 1, max: 1, ang: -Math.PI / 2, active: true, connected: true, flash: 0 }, true); ctx.globalAlpha = 1;
       ctx.strokeStyle = why ? '#ff6a5a' : '#9be37a'; ctx.lineWidth = 1.5; ctx.strokeRect(mtx * TS + .5, mty * TS + .5, TS - 1, TS - 1);
-      const L = lvStats(STRUCTURES[G.bsel].lv[0], STRUCTURES[G.bsel]); if (L.range) { ctx.strokeStyle = 'rgba(255,255,255,.2)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc((mtx + .5) * TS, (mty + .5) * TS, L.range * TS, 0, 7); ctx.stroke(); }
+      const L = lvStats(STRUCTURES[G.bsel].lv[0], STRUCTURES[G.bsel]); if (L.range) { const hiB = STRUCTURES[G.bsel].turret && TILES[tile[idx(mtx, mty)]].hi ? (tech.defH ? 2 : 1) : 0; ctx.strokeStyle = hiB ? 'rgba(160,255,140,.35)' : 'rgba(255,255,255,.2)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc((mtx + .5) * TS, (mty + .5) * TS, (L.range + hiB) * TS, 0, 7); ctx.stroke(); }
       if (G.bsel === 'pylon' || G.bsel === 'relay') { ctx.strokeStyle = 'rgba(255,216,106,.3)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc((mtx + .5) * TS, (mty + .5) * TS, STRUCTURES[G.bsel].lv[0].link * TS, 0, 7); ctx.stroke(); }
       if (why && !(STRUCTURES[G.bsel].lv[0].link && planChain(G.bsel, mtx, mty).list.length)) { ctx.font = '600 6px ' + FONT; ctx.textAlign = 'center'; const w = ctx.measureText(why).width + 6; ctx.fillStyle = 'rgba(40,10,8,.75)'; ctx.fillRect((mtx + .5) * TS - w / 2, mty * TS - 28, w, 9); ctx.fillStyle = '#ffc0b0'; ctx.fillText(why, (mtx + .5) * TS, mty * TS - 21.5); ctx.textAlign = 'left'; } }
     }
@@ -3647,7 +3650,7 @@ const nearestCore = list => { let b = null, bd = 1e9; for (const c of list) { co
 function recipeNeed(id, ready) { const R = RECIPES.find(r => r.id === id), lock = recipeLock(R); if (lock) return lock; if (canPay(R.cost)) return ready; return `${R.name} 재료 · ` + Object.entries(R.cost).map(([k, v]) => `${RES[k].name} ${Math.min(res[k], v)}/${v}`).join(' · '); }
 function coreStepInfo(list) {
   const sleep = list.filter(c => c.state !== 'active'), cut = list.filter(c => c.state === 'active' && !c.connected);
-  if (sleep.length) { const c = nearestCore(sleep), lk = coreLock(c); return { text: lk ? `${lk} — 먼저 쓰러뜨려라` : `${jo(c.name, '을')} 깨워라 (E · ${costText(wakeCost(c))})${list.length > 1 ? ` · 깨움 ${list.length - sleep.length}/${list.length}` : ''}`, target: () => { if (lk) { const b = enemies.find(e => !e.dead && ['colossus', 'frostgiant', 'flamegiant', 'mother', 'leviathan'].includes(e.k) && Math.hypot(e.x - coreCenter(c)[0], e.y - coreCenter(c)[1]) < 20 * TS); if (b) return [b.x, b.y]; } return coreCenter(c); } }; }
+  if (sleep.length) { const c = nearestCore(sleep), lk = coreLock(c); return { text: lk ? `${lk} — 먼저 쓰러뜨려라` : `${jo(c.name, '을')} 깨워라 (E · ${costText(wakeCost(c))})${list.length > 1 ? ` · 깨움 ${list.length - sleep.length}/${list.length}` : ''}`, target: () => { if (lk) { const b = enemies.find(e => !e.dead && ['colossus', 'frostgiant', 'flamegiant', 'mother', 'leviathan', 'wyrm'].includes(e.k) && Math.hypot(e.x - coreCenter(c)[0], e.y - coreCenter(c)[1]) < 20 * TS); if (b) return [b.x, b.y]; } return coreCenter(c); } }; }
   if (cut.length) { const c = nearestCore(cut); return { text: `전신주로 ${jo(c.name, '을')} 본거지와 이어라${list.length > 1 ? ` (연결 ${list.length - cut.length}/${list.length})` : ''}`, target: () => coreCenter(c) }; }
   return null;
 }
@@ -3798,7 +3801,7 @@ function drawHUD0(sw, sh) {
   const nf = floods.filter(f => !f.done).sort((a, b) => a.t - b.t)[0];
   if (LAYER.kind === 'abyss' && LAYER.ab) uText(`석판: ${OBJ[LAYER.ab.obj.type]} · 최고 ${G.bestDepth}층`, cx0 + 68, 75, INK2); else uText(nf ? `범람까지 ${Math.max(0, Math.ceil(nf.t - G.clock))}초` : (G.sealOpen ? `둥지 ${gates.filter(g => g.type === 'nest' && !g.dead).length}개 남음` : P.keys > 0 ? '봉인 열쇠 보유' : '봉인 닫힘'), cx0 + 68, 75, nf ? BAD : INK2);
   if (G.mmT <= 0) { G.mmT = .5; renderMinimap(); }
-  const mmH = LAYER.kind === 'valley' && !G.seal2Open ? CONFIG.ruins.y0 - 2 : LAYER.kind === 'valley' && !G.seaOpen ? CONFIG.sea.y0 : LAYER.kind === 'valley' && !G.volcOpen && !G.blightOpen ? CONFIG.sea.y1 + 1 : H, mmW = LAYER.kind === 'valley' && !G.highOpen && !G.seaOpen ? CONFIG.beyond.x1 + 2 : W, mw = cw - 12, mh = mw * mmH / mmW, mox = cx0 + 6, my0 = 102; frame(cx0, my0 - 6, cw, mh + 12); hot(cx0 - 2, my0 - 8, cw + 4, mh + 16, { tip: { title: '지도', desc: '흰 점: 나 · 초록 네모: 연결된 코어 · 주황: 끊긴 코어 · 보라: 둥지·균열 · 노란 원: 제단 · 빨간 점: 적' } });
+  const mmH = LAYER.kind === 'valley' && !G.seal2Open ? CONFIG.ruins.y0 - 2 : LAYER.kind === 'valley' && !G.seaOpen ? CONFIG.sea.y0 : LAYER.kind === 'valley' && !G.volcOpen && !G.blightOpen ? CONFIG.sea.y1 + 1 : H, mmW = LAYER.kind === 'valley' && !G.highOpen && !G.seaOpen && !G.canyonOpen ? CONFIG.beyond.x1 + 2 : W, mw = cw - 12, mh = mw * mmH / mmW, mox = cx0 + 6, my0 = 102; frame(cx0, my0 - 6, cw, mh + 12); hot(cx0 - 2, my0 - 8, cw + 4, mh + 16, { tip: { title: '지도', desc: '흰 점: 나 · 초록 네모: 연결된 코어 · 주황: 끊긴 코어 · 보라: 둥지·균열 · 노란 원: 제단 · 빨간 점: 적' } });
   ctx.imageSmoothingEnabled = false; ctx.drawImage(mmCv, 0, 0, mmW, mmH, mox, my0, mw, mh); ctx.imageSmoothingEnabled = true; ctx.save(); ctx.beginPath(); ctx.rect(mox, my0, mw, mh); ctx.clip();
   const ms = mw / (mmW * TS);
   for (const [a, b] of links) { ctx.strokeStyle = a.o.connected && b.o.connected ? 'rgba(255,216,106,.9)' : 'rgba(160,160,160,.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(mox + a.x * TS * ms, my0 + a.y * TS * ms); ctx.lineTo(mox + b.x * TS * ms, my0 + b.y * TS * ms); ctx.stroke(); }
@@ -3902,6 +3905,6 @@ function loop(now) {
 }
 requestAnimationFrame(loop);
 cv.focus();
-window.__seal = { baseCores, coreLock, REGIONS, regionTick, PREFABS, prefabErrors, pfShape, placePrefab, pfReach, prefabsPlaced: () => ({ surf: surfPrefabs, canyon: canyonPrefabs }), openCanyon, ensureCanyon, canyonTunnel, cliffLv, lvAt, wetAt, boneSpikes, canyonInfo, CANYON, pickRaidTarget, spawnRaids, spawnQLen: () => spawnQ.length, spawnQList: () => spawnQ, camPos: () => [cam.x, cam.y], planChain, dragLine, lineEnd, drainCmds: () => { while (cmdQ.length) applyCommand(0, cmdQ.shift()); }, isNode, fN, openSlots, closeSlots, pickSlot, newSlot, deleteSlot, slotInfo, setSlot, slotNow: () => curSlot, uiSlots: () => ui.slots, openSea, swimAI, leviAI, padList, nearPad, usePad, currentQuest, QUESTS, CONFIG, threatN, threatStage, spawnNight, openHigh, checkPurify, ruinRegrow, warmAt, overPit, genHigh, TILES_ALL: TILES, useSkill, staggerBoss, SKILLS, hurtEnemy, bossAI, autoSave, blightTick, hitsTo, readCheckpoint, restoreCheckpoint, cpMilestone, ui: () => uiRects.filter(r => r.id).map(r => ({ id: r.id, x: (r.x + r.w / 2) * UIK, y: (r.y + r.h / 2) * UIK, dis: !!r.dis })), uik: () => UIK, uiState: () => ({ menu: ui.menu, tab: ui.tab, craftCat: ui.craftCat, hover: ui.hoverR && ui.hoverR.id, preview: !!ui.preview }), openMenu, closeMenu, makeEnemy, objTarget, zoom: () => CONFIG.ZOOM, losClear, turretFire, recomputeNet, wDmg, gainXP, drawTips: () => { let n = 0; for (const r of uiRects.slice()) if (r.tip) { drawTip(typeof r.tip === 'function' ? r.tip() : r.tip, 1200, 700, r); n++; } return n; }, hasMod, lvStats, incomeNow, blockedTile, RECIPES, RESEARCH, STRUCTURES, CORE_LV, TILES, openSeal2, jo, cleanNum, startRecall, flyWay, pylonLink, openVolc, openBlight, heartsLeft, BRANCH, branchInfo, addBomb, updBombs, volcTick, blightZoneTick, rockAt, altarHint, reclaimRelic, nearRelic, relicWhy, zoneAt, openCache, interact, makeTablet, enterTablet, reachEnding, endContinue, floorClear, abyssLayer: () => LAYER, damageCore, saveGame, loadGame, clearSave, enterAbyss, leaveAbyss, layerInfo: () => ({ kind: LAYER.kind, W, H, N }), warp, warpWhy, dropAcc, refreshMods, accMods, useCharm, openChar, summonBoss, enterHardmode, useAltar, objective, damageStruct, restoreRuins, growNest, hurtNest, pathOK, cutsPath, step, applyCommand, get: () => ({ P, G, S, res, enemies, structs, cores, tile, fieldG, fieldF, terrConn, gates, tech, sel }), openSeal, spawnFlood, newGame, canPlace, setSel, draw, T, idx, calm: () => { spawnQ.length = 0; floods.length = 0; enemies.forEach(e => e.dead = true); } };
+window.__seal = { drawStruct, baseCores, coreLock, REGIONS, regionTick, PREFABS, prefabErrors, pfShape, placePrefab, pfReach, prefabsPlaced: () => ({ surf: surfPrefabs, canyon: canyonPrefabs }), openCanyon, ensureCanyon, canyonTunnel, cliffLv, lvAt, wetAt, boneSpikes, canyonInfo, CANYON, pickRaidTarget, spawnRaids, spawnQLen: () => spawnQ.length, spawnQList: () => spawnQ, camPos: () => [cam.x, cam.y], planChain, dragLine, lineEnd, drainCmds: () => { while (cmdQ.length) applyCommand(0, cmdQ.shift()); }, isNode, fN, openSlots, closeSlots, pickSlot, newSlot, deleteSlot, slotInfo, setSlot, slotNow: () => curSlot, uiSlots: () => ui.slots, openSea, swimAI, leviAI, padList, nearPad, usePad, currentQuest, QUESTS, CONFIG, threatN, threatStage, spawnNight, openHigh, checkPurify, ruinRegrow, warmAt, overPit, genHigh, TILES_ALL: TILES, useSkill, staggerBoss, SKILLS, hurtEnemy, bossAI, autoSave, blightTick, hitsTo, readCheckpoint, restoreCheckpoint, cpMilestone, ui: () => uiRects.filter(r => r.id).map(r => ({ id: r.id, x: (r.x + r.w / 2) * UIK, y: (r.y + r.h / 2) * UIK, dis: !!r.dis })), uik: () => UIK, uiState: () => ({ menu: ui.menu, tab: ui.tab, craftCat: ui.craftCat, hover: ui.hoverR && ui.hoverR.id, preview: !!ui.preview }), openMenu, closeMenu, makeEnemy, objTarget, zoom: () => CONFIG.ZOOM, losClear, turretFire, recomputeNet, wDmg, gainXP, drawTips: () => { let n = 0; for (const r of uiRects.slice()) if (r.tip) { drawTip(typeof r.tip === 'function' ? r.tip() : r.tip, 1200, 700, r); n++; } return n; }, hasMod, lvStats, incomeNow, blockedTile, RECIPES, RESEARCH, STRUCTURES, CORE_LV, TILES, openSeal2, jo, cleanNum, startRecall, flyWay, pylonLink, openVolc, openBlight, heartsLeft, BRANCH, branchInfo, addBomb, updBombs, volcTick, blightZoneTick, rockAt, altarHint, reclaimRelic, nearRelic, relicWhy, zoneAt, openCache, interact, makeTablet, enterTablet, reachEnding, endContinue, floorClear, abyssLayer: () => LAYER, damageCore, saveGame, loadGame, clearSave, enterAbyss, leaveAbyss, layerInfo: () => ({ kind: LAYER.kind, W, H, N }), warp, warpWhy, dropAcc, refreshMods, accMods, useCharm, openChar, summonBoss, enterHardmode, useAltar, objective, damageStruct, restoreRuins, growNest, hurtNest, pathOK, cutsPath, step, applyCommand, get: () => ({ P, G, S, res, enemies, structs, cores, tile, fieldG, fieldF, terrConn, gates, tech, sel }), openSeal, spawnFlood, newGame, canPlace, setSel, draw, T, idx, calm: () => { spawnQ.length = 0; floods.length = 0; enemies.forEach(e => e.dead = true); } };
 })();
 </script>
